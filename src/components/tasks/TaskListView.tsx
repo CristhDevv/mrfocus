@@ -138,7 +138,7 @@ export function TaskListView({
       {/* Search & Filter Header Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Filter Tabs */}
-        <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none -mx-1 px-1">
+        <div className="flex flex-wrap items-center gap-1.5 w-full">
           {[
             { id: 'all', label: 'Todas', count: tasks.length },
             { id: 'today', label: 'Hoy', count: tasks.filter((t) => t.status !== 'done' && t.dueDate === todayStr).length },
@@ -151,7 +151,7 @@ export function TaskListView({
               <button
                 key={tab.id}
                 onClick={() => setFilterTab(tab.id as typeof filterTab)}
-                className={`flex items-center space-x-1.5 sm:space-x-2 rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-semibold transition-all whitespace-nowrap shrink-0 ${
+                className={`flex items-center space-x-1.5 rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-semibold transition-all shrink-0 ${
                   isActive
                     ? 'bg-[#18181B] text-white shadow-xs'
                     : 'text-[#475569] bg-white hover:bg-slate-100 hover:text-[#18181B] border border-slate-200'

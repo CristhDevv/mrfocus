@@ -27,6 +27,7 @@ export function TaskKanbanView({
   onSelectTask,
   onDeleteTask,
 }: TaskKanbanViewProps) {
+  const [selectedMobileCol, setSelectedMobileCol] = useState<'all' | TaskStatus>('all');
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const projectMap = new Map(projects.map((p) => [p.id, p]));
 
@@ -69,59 +70,104 @@ export function TaskKanbanView({
     }
   };
 
+  const visibleColumns = COLUMNS.filter((col) => {
+    if (selectedMobileCol === 'all') return true;
+    return col.id === selectedMobileCol;
+  });
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 pb-6 overflow-x-auto">
-      {COLUMNS.map((col) => {
-        const columnTasks = tasks.filter((t) => (t.status || 'todo') === col.id);
-
-        return (
-          <div
-            key={col.id}
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, col.id)}
-            className="flex flex-col rounded-2xl border border-slate-200 bg-[#F8FAFC] p-3.5 min-h-[520px]"
-          >
-            {/* Column Header */}
-            <div className={`flex items-center justify-between px-3 py-2 rounded-xl mb-3 ${col.headerBg}`}>
-              <div className="flex items-center space-x-2">
-                <span className={`h-2.5 w-2.5 rounded-full ${col.dot}`} />
-                <h3 className={`text-xs font-bold tracking-wide ${col.color}`}>
-                  {col.title}
-                </h3>
-              </div>
-              <span className="rounded-md bg-white px-2 py-0.5 text-[11px] font-bold text-slate-700 shadow-2xs border border-slate-100">
-                {columnTasks.length}
+    <div className="space-y-4 w-full max-w-full">
+      {/* Mobile Column Quick Selector */}
+      <div className="sm:hidden flex flex-wrap items-center gap-1.5 w-full">
+        <button
+          type="button"
+          onClick={() => setSelectedMobileCol('all')}
+          className={`rounded-lg px-2.5 py-1 text-xs font-bold transition-all ${
+            selectedMobileCol === 'all'
+              ? 'bg-[#18181B] text-white shadow-xs'
+              : 'bg-white text-[#475569] border border-slate-200'
+          }`}
+        >
+          Todas las Columnas
+        </button>
+        {COLUMNS.map((col) => {
+          const count = tasks.filter((t) => (t.status || 'todo') === col.id).length;
+          const isSelected = selectedMobileCol === col.id;
+          return (
+            <button
+              key={col.id}
+              type="button"
+              onClick={() => setSelectedMobileCol(col.id)}
+              className={`flex items-center space-x-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition-all ${
+                isSelected
+                  ? 'bg-[#18181B] text-white shadow-xs'
+                  : 'bg-white text-[#475569] border border-slate-200'
+              }`}
+            >
+              <span>{col.title}</span>
+              <span className={`rounded-md px-1 py-0.2 text-[10px] ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'}`}>
+                {count}
               </span>
-            </div>
+            </button>
+          );
+        })}
+      </div>
 
-            {/* Column Task Cards */}
-            <div className="flex-1 space-y-2 overflow-y-auto">
-              {columnTasks.map((task) => (
-                <div
-                  key={task.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, task.id)}
-                >
-                  <TaskCard
-                    task={task}
-                    project={task.projectId ? projectMap.get(task.projectId) : undefined}
-                    onUpdateTask={onUpdateTask}
-                    onSelectTask={onSelectTask}
-                    onDeleteTask={onDeleteTask}
-                    compact={true}
-                  />
-                </div>
-              ))}
+      {/* Kanban Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 pb-6 w-full max-w-full">
+        {visibleColumns.map((col) => {
+          const columnTasks = tasks.filter((t) => (t.status || 'todo') === col.id);
 
-              {columnTasks.length === 0 && (
-                <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center text-xs text-slate-400 font-medium">
-                  Arrastra tareas aquí
+          return (
+            <div
+              key={col.id}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, col.id)}
+              className="flex flex-col rounded-2xl border border-slate-200 bg-[#F8FAFC] p-3.5 min-h-[300px] sm:min-h-[520px] w-full"
+            >
+              {/* Column Header */}
+              <div className={`flex items-center justify-between px-3 py-2 rounded-xl mb-3 ${col.headerBg}`}>
+                <div className="flex items-center space-x-2">
+                  <span className={`h-2.5 w-2.5 rounded-full ${col.dot}`} />
+                  <h3 className={`text-xs font-bold tracking-wide ${col.color}`}>
+                    {col.title}
+                  </h3>
                 </div>
-              )}
+                <span className="rounded-md bg-white px-2 py-0.5 text-[11px] font-bold text-slate-700 shadow-2xs border border-slate-100">
+                  {columnTasks.length}
+                </span>
+              </div>
+
+              {/* Column Task Cards */}
+              <div className="flex-1 space-y-2 overflow-y-auto">
+                {columnTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, task.id)}
+                  >
+                    <TaskCard
+                      task={task}
+                      project={task.projectId ? projectMap.get(task.projectId) : undefined}
+                      onUpdateTask={onUpdateTask}
+                      onSelectTask={onSelectTask}
+                      onDeleteTask={onDeleteTask}
+                      compact={true}
+                    />
+                  </div>
+                ))}
+
+                {columnTasks.length === 0 && (
+                  <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center text-xs text-slate-400 font-medium">
+                    No hay tareas en esta columna
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
+

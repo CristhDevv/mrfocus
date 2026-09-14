@@ -348,9 +348,9 @@ export function CalendarView({
       )}
 
       {/* Main Grid: Calendar Timeline + Unscheduled Backlog Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 w-full max-w-full">
         {/* Timeline View */}
-        <div className="lg:col-span-3 rounded-xl border border-slate-200 bg-white p-3 sm:p-4 shadow-xs overflow-x-auto">
+        <div className="lg:col-span-3 rounded-xl border border-slate-200 bg-white p-3 sm:p-4 shadow-xs w-full max-w-full overflow-hidden">
           {viewMode === 'day' ? (
             <div className="w-full min-w-0">
               <div className="space-y-1">
@@ -440,57 +440,115 @@ export function CalendarView({
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-7 gap-2 min-w-[700px]">
-              {weekDays.map((day) => {
-                const dayStr = format(day, 'yyyy-MM-dd');
-                const isCurrent = isToday(day);
-                const dayTasks = tasks.filter((t) => t.dueDate === dayStr || (t.scheduledStart && t.scheduledStart.startsWith(dayStr)));
-                const dayEvents = events.filter((e) => e.startTime.startsWith(dayStr));
+            <div className="w-full">
+              {/* Mobile: Stacked 7-day Agenda List (Zero Horizontal Scroll) */}
+              <div className="sm:hidden space-y-2.5 w-full">
+                {weekDays.map((day) => {
+                  const dayStr = format(day, 'yyyy-MM-dd');
+                  const isCurrent = isToday(day);
+                  const dayTasks = tasks.filter((t) => t.dueDate === dayStr || (t.scheduledStart && t.scheduledStart.startsWith(dayStr)));
+                  const dayEvents = events.filter((e) => e.startTime.startsWith(dayStr));
 
-                return (
-                  <div
-                    key={dayStr}
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDropOnHour(e, dayStr, 9)}
-                    className={`flex flex-col rounded-xl border p-2.5 min-h-[360px] transition-all ${
-                      isCurrent
-                        ? 'border-[#18181B] bg-slate-50/50 shadow-2xs'
-                        : 'border-slate-200 bg-white hover:border-slate-300'
-                    }`}
-                  >
-                    <div className="text-center pb-2 border-b border-slate-100">
-                      <span className="text-[11px] font-bold uppercase text-slate-400">
-                        {format(day, 'EEE', { locale: es })}
-                      </span>
-                      <h4 className={`text-sm font-bold mt-0.5 ${isCurrent ? 'text-[#18181B]' : 'text-slate-700'}`}>
-                        {format(day, 'd')}
-                      </h4>
+                  return (
+                    <div
+                      key={dayStr}
+                      className={`rounded-xl border p-3 transition-all ${
+                        isCurrent ? 'border-[#18181B] bg-slate-50 shadow-2xs' : 'border-slate-200 bg-white'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                        <span className="text-xs font-bold text-[#18181B] capitalize">
+                          {format(day, 'EEEE, d MMM', { locale: es })}
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-400">
+                          {dayEvents.length + dayTasks.length} compromisos
+                        </span>
+                      </div>
+
+                      <div className="mt-2 space-y-1.5">
+                        {dayEvents.length === 0 && dayTasks.length === 0 ? (
+                          <p className="text-[11px] text-slate-400 italic py-1">Sin eventos ni tareas</p>
+                        ) : (
+                          <>
+                            {dayEvents.map((ev) => (
+                              <div
+                                key={ev.id}
+                                className="rounded-lg p-2 text-xs font-semibold text-white truncate"
+                                style={{ backgroundColor: ev.color || '#18181B' }}
+                              >
+                                {ev.title} ({format(new Date(ev.startTime), 'HH:mm')} - {format(new Date(ev.endTime), 'HH:mm')})
+                              </div>
+                            ))}
+                            {dayTasks.map((t) => (
+                              <div
+                                key={t.id}
+                                onClick={() => onSelectTask(t)}
+                                className="rounded-lg bg-slate-50 p-2 text-xs font-medium text-[#18181B] border border-slate-200 truncate cursor-pointer hover:bg-white"
+                              >
+                                {t.title}
+                              </div>
+                            ))}
+                          </>
+                        )}
+                      </div>
                     </div>
+                  );
+                })}
+              </div>
 
-                    <div className="mt-2 flex-1 space-y-1.5 overflow-y-auto">
-                      {dayEvents.map((ev) => (
-                        <div
-                          key={ev.id}
-                          className="rounded-lg p-1.5 text-[11px] font-semibold truncate text-white shadow-2xs"
-                          style={{ backgroundColor: ev.color || '#18181B' }}
-                        >
-                          {ev.title}
-                        </div>
-                      ))}
+              {/* Tablet/Desktop: 7 Columns Grid */}
+              <div className="hidden sm:grid sm:grid-cols-7 gap-2 w-full">
+                {weekDays.map((day) => {
+                  const dayStr = format(day, 'yyyy-MM-dd');
+                  const isCurrent = isToday(day);
+                  const dayTasks = tasks.filter((t) => t.dueDate === dayStr || (t.scheduledStart && t.scheduledStart.startsWith(dayStr)));
+                  const dayEvents = events.filter((e) => e.startTime.startsWith(dayStr));
 
-                      {dayTasks.map((t) => (
-                        <div
-                          key={t.id}
-                          onClick={() => onSelectTask(t)}
-                          className="rounded-lg bg-slate-50 p-1.5 text-[11px] font-medium text-[#18181B] border border-slate-200 truncate cursor-pointer hover:border-slate-300 hover:bg-white transition-all shadow-2xs"
-                        >
-                          {t.title}
-                        </div>
-                      ))}
+                  return (
+                    <div
+                      key={dayStr}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDropOnHour(e, dayStr, 9)}
+                      className={`flex flex-col rounded-xl border p-2.5 min-h-[360px] transition-all ${
+                        isCurrent
+                          ? 'border-[#18181B] bg-slate-50/50 shadow-2xs'
+                          : 'border-slate-200 bg-white hover:border-slate-300'
+                      }`}
+                    >
+                      <div className="text-center pb-2 border-b border-slate-100">
+                        <span className="text-[11px] font-bold uppercase text-slate-400">
+                          {format(day, 'EEE', { locale: es })}
+                        </span>
+                        <h4 className={`text-sm font-bold mt-0.5 ${isCurrent ? 'text-[#18181B]' : 'text-slate-700'}`}>
+                          {format(day, 'd')}
+                        </h4>
+                      </div>
+
+                      <div className="mt-2 flex-1 space-y-1.5 overflow-y-auto">
+                        {dayEvents.map((ev) => (
+                          <div
+                            key={ev.id}
+                            className="rounded-lg p-1.5 text-[11px] font-semibold truncate text-white shadow-2xs"
+                            style={{ backgroundColor: ev.color || '#18181B' }}
+                          >
+                            {ev.title}
+                          </div>
+                        ))}
+
+                        {dayTasks.map((t) => (
+                          <div
+                            key={t.id}
+                            onClick={() => onSelectTask(t)}
+                            className="rounded-lg bg-slate-50 p-1.5 text-[11px] font-medium text-[#18181B] border border-slate-200 truncate cursor-pointer hover:border-slate-300 hover:bg-white transition-all shadow-2xs"
+                          >
+                            {t.title}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
