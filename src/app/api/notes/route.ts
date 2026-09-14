@@ -1,103 +1,78 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import { Note } from '@/types';
+import { getAuthUser } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const taskId = searchParams.get('taskId');
-    const projectId = searchParams.get('projectId');
-    const search = searchParams.get('search');
+    const authUser = getAuthUser(req);
+    const userId = authUser ? authUser.id : 'default_user';
 
-    let query = `SELECT * FROM notes WHERE 1=1`;
-    const params: string[] = [];
-
-    if (taskId) {
-      query += ` AND task_id = ?`;
-      params.push(taskId);
-    }
-    if (projectId) {
-      query += ` AND project_id = ?`;
-      params.push(projectId);
-    }
-    if (search) {
-      query += ` AND (title LIKE ? OR content LIKE ?)`;
-      params.push(`%${search}%`, `%${search}%`);
-    }
-
-    query += ` ORDER BY updated_at DESC`;
-
-    const rows = db.prepare(query).all(...params) as Array<{
-      id: string;
-      title: string;
-      content: string;
-      task_id?: string;
-      project_id?: string;
-      tags: string;
-      updated_at: string;
-      created_at: string;
-    }>;
-
+    const rows = db.prepare('SELECT * FROM notes WHERE user_id = ?').all(userId) as any[];
     const notes: Note[] = rows.map((r) => ({
       id: r.id,
       title: r.title,
       content: r.content,
-      taskId: r.task_id || undefined,
       projectId: r.project_id || undefined,
-      tags: r.tags ? JSON.parse(r.tags) : [],
-      updatedAt: r.updated_at,
+      taskId: r.task_id || undefined,
+      tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
+      isPinned: Boolean(r.is_pinned),
       createdAt: r.created_at,
+      updatedAt: r.updated_at,
     }));
 
     return NextResponse.json({ notes });
   } catch (error) {
-    console.error('Error fetching notes:', error);
     return NextResponse.json({ error: 'Failed to fetch notes' }, { status: 500 });
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const {
-      title = 'Nota rápida',
-      content = '',
-      taskId,
-      projectId,
-      tags = [],
-    } = body;
+    const authUser = getAuthUser(req);
+    const userId = authUser ? authUser.id : 'default_user';
 
-    const id = `note_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const { title = 'Nueva Nota', content = '', projectId = null, taskId = null, tags = [], isPinned = false } = await req.json();
+
+    const id = `note_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     const now = new Date().toISOString();
 
-    db.prepare(`
-      INSERT INTO notes (id, title, content, task_id, project_id, tags, updated_at, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      id,
-      title.trim(),
-      content,
-      taskId || null,
-      projectId || null,
-      JSON.stringify(tags),
-      now,
-      now
-    );
+    db.prepare(
+      'INSERT INTO notes (id, user_id, title, content, project_id, task_id, tags, is_pinned, updated_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    ).run(id, userId, title.trim(), content, projectId, taskId, JSON.stringify(tags), isPinned ? 1 : 0, now, now);
+
+    try {
+      await supabase.from('notes').insert({
+        id,
+        user_id: userId,
+        title: title.trim(),
+        content,
+        project_id: projectId,
+        task_id: taskId,
+        tags,
+        is_pinned: isPinned,
+        created_at: now,
+        updated_at: now,
+      });
+    } catch (e) {
+      console.warn('Supabase insert note error:', e);
+    }
 
     const newNote: Note = {
       id,
       title: title.trim(),
       content,
-      taskId: taskId || undefined,
       projectId: projectId || undefined,
+      taskId: taskId || undefined,
       tags,
-      updatedAt: now,
+      isPinned,
       createdAt: now,
+      updatedAt: now,
     };
 
     return NextResponse.json({ note: newNote }, { status: 201 });
   } catch (error) {
-    console.error('Error creating note:', error);
     return NextResponse.json({ error: 'Failed to create note' }, { status: 500 });
   }
 }

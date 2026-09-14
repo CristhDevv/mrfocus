@@ -1,39 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import { CalendarEvent } from '@/types';
+import { getAuthUser } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
+    const authUser = getAuthUser(req);
+    const userId = authUser ? authUser.id : 'default_user';
 
-    let query = `SELECT * FROM calendar_events WHERE 1=1`;
-    const params: string[] = [];
-
-    if (startDate) {
-      query += ` AND end_time >= ?`;
-      params.push(startDate);
-    }
-    if (endDate) {
-      query += ` AND start_time <= ?`;
-      params.push(endDate);
-    }
-
-    query += ` ORDER BY start_time ASC`;
-
-    const rows = db.prepare(query).all(...params) as Array<{
-      id: string;
-      title: string;
-      description?: string;
-      start_time: string;
-      end_time: string;
-      is_all_day: number;
-      color?: string;
-      location?: string;
-      project_id?: string;
-    }>;
-
+    const rows = db.prepare('SELECT * FROM calendar_events WHERE user_id = ?').all(userId) as any[];
     const events: CalendarEvent[] = rows.map((r) => ({
       id: r.id,
       title: r.title,
@@ -41,53 +17,50 @@ export async function GET(req: NextRequest) {
       startTime: r.start_time,
       endTime: r.end_time,
       isAllDay: Boolean(r.is_all_day),
-      color: r.color || undefined,
+      color: r.color || '#18181B',
       location: r.location || undefined,
       projectId: r.project_id || undefined,
     }));
 
     return NextResponse.json({ events });
   } catch (error) {
-    console.error('Error fetching calendar events:', error);
-    return NextResponse.json({ error: 'Failed to fetch calendar events' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 });
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const {
-      title,
-      description,
-      startTime,
-      endTime,
-      isAllDay = false,
-      color = '#3b82f6',
-      location,
-      projectId,
-    } = body;
+    const authUser = getAuthUser(req);
+    const userId = authUser ? authUser.id : 'default_user';
+
+    const { title, description = '', startTime, endTime, isAllDay = false, color = '#18181B', location = '', projectId = null } = await req.json();
 
     if (!title || !startTime || !endTime) {
-      return NextResponse.json({ error: 'Title, startTime, and endTime are required' }, { status: 400 });
+      return NextResponse.json({ error: 'Title, startTime and endTime required' }, { status: 400 });
     }
 
-    const id = `ev_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const id = `ev_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    const now = new Date().toISOString();
 
-    db.prepare(`
-      INSERT INTO calendar_events (
-        id, title, description, start_time, end_time, is_all_day, color, location, project_id
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      id,
-      title.trim(),
-      description || null,
-      startTime,
-      endTime,
-      isAllDay ? 1 : 0,
-      color,
-      location || null,
-      projectId || null
-    );
+    db.prepare(
+      'INSERT INTO calendar_events (id, user_id, title, description, start_time, end_time, is_all_day, color, location, project_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    ).run(id, userId, title.trim(), description, startTime, endTime, isAllDay ? 1 : 0, color, location, projectId, now);
+
+    try {
+      await supabase.from('calendar_events').insert({
+        id,
+        user_id: userId,
+        title: title.trim(),
+        description,
+        start_time: startTime,
+        end_time: endTime,
+        is_all_day: isAllDay,
+        color,
+        created_at: now,
+      });
+    } catch (e) {
+      console.warn('Supabase event insert notice:', e);
+    }
 
     const newEvent: CalendarEvent = {
       id,
@@ -103,7 +76,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ event: newEvent }, { status: 201 });
   } catch (error) {
-    console.error('Error creating calendar event:', error);
-    return NextResponse.json({ error: 'Failed to create calendar event' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create event' }, { status: 500 });
   }
 }

@@ -1,136 +1,58 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
-import { TimeSession } from '@/types';
+import { supabase } from '@/lib/supabase';
+import { getAuthUser } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
-    const projectId = searchParams.get('projectId');
-    const taskId = searchParams.get('taskId');
+    const authUser = getAuthUser(req);
+    const userId = authUser ? authUser.id : 'default_user';
 
-    let query = `
-      SELECT ts.*, t.title as task_title, p.name as project_name, p.color as project_color
-      FROM time_sessions ts
-      LEFT JOIN tasks t ON ts.task_id = t.id
-      LEFT JOIN projects p ON ts.project_id = p.id
-      WHERE 1=1
-    `;
-    const params: (string | number)[] = [];
-
-    if (startDate) {
-      query += ` AND ts.start_time >= ?`;
-      params.push(startDate);
-    }
-    if (endDate) {
-      query += ` AND ts.end_time <= ?`;
-      params.push(endDate);
-    }
-    if (projectId) {
-      query += ` AND ts.project_id = ?`;
-      params.push(projectId);
-    }
-    if (taskId) {
-      query += ` AND ts.task_id = ?`;
-      params.push(taskId);
-    }
-
-    query += ` ORDER BY ts.start_time DESC`;
-
-    const rows = db.prepare(query).all(...params) as Array<{
-      id: string;
-      task_id?: string;
-      task_title?: string;
-      project_id?: string;
-      project_name?: string;
-      project_color?: string;
-      type: string;
-      start_time: string;
-      end_time: string;
-      duration_minutes: number;
-      notes?: string;
-    }>;
-
-    const sessions: TimeSession[] = rows.map((r) => ({
-      id: r.id,
-      taskId: r.task_id || undefined,
-      taskTitle: r.task_title || undefined,
-      projectId: r.project_id || undefined,
-      projectName: r.project_name || undefined,
-      projectColor: r.project_color || undefined,
-      type: r.type as TimeSession['type'],
-      startTime: r.start_time,
-      endTime: r.end_time,
-      durationMinutes: r.duration_minutes,
-      notes: r.notes || undefined,
-    }));
-
+    const sessions = db.prepare('SELECT * FROM time_sessions WHERE user_id = ?').all(userId);
     return NextResponse.json({ sessions });
   } catch (error) {
-    console.error('Error fetching time sessions:', error);
-    return NextResponse.json({ error: 'Failed to fetch time sessions' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch sessions' }, { status: 500 });
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const {
-      taskId,
-      projectId,
-      type = 'pomodoro',
-      startTime,
-      endTime,
-      durationMinutes,
-      notes,
-    } = body;
+    const authUser = getAuthUser(req);
+    const userId = authUser ? authUser.id : 'default_user';
 
-    if (!startTime || !endTime || !durationMinutes) {
-      return NextResponse.json({ error: 'startTime, endTime, and durationMinutes are required' }, { status: 400 });
-    }
+    const { taskId = null, projectId = null, type = 'pomodoro', durationMinutes = 25, notes = '', startTime, endTime } = await req.json();
 
-    const id = `ts_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const id = `sess_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     const now = new Date().toISOString();
+    const start = startTime || now;
+    const end = endTime || now;
 
-    db.prepare(`
-      INSERT INTO time_sessions (
-        id, task_id, project_id, type, start_time, end_time, duration_minutes, notes, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      id,
-      taskId || null,
-      projectId || null,
-      type,
-      startTime,
-      endTime,
-      durationMinutes,
-      notes || null,
-      now
-    );
+    db.prepare(
+      'INSERT INTO time_sessions (id, user_id, task_id, project_id, type, start_time, end_time, duration_minutes, notes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    ).run(id, userId, taskId, projectId, type, start, end, durationMinutes, notes, now);
+
+    try {
+      await supabase.from('time_sessions').insert({
+        id,
+        user_id: userId,
+        task_id: taskId,
+        duration_minutes: durationMinutes,
+        mode: type,
+        notes,
+        started_at: start,
+        ended_at: end,
+        created_at: now,
+      });
+    } catch (e) {
+      console.warn('Supabase time_session insert error:', e);
+    }
 
     if (taskId) {
-      db.prepare(`
-        UPDATE tasks
-        SET actual_minutes = actual_minutes + ?
-        WHERE id = ?
-      `).run(durationMinutes, taskId);
+      db.prepare('UPDATE tasks SET actual_minutes = actual_minutes + ? WHERE id = ?').run(durationMinutes, taskId);
     }
 
-    return NextResponse.json({
-      session: {
-        id,
-        taskId,
-        projectId,
-        type,
-        startTime,
-        endTime,
-        durationMinutes,
-        notes,
-      },
-    }, { status: 201 });
+    return NextResponse.json({ success: true, id }, { status: 201 });
   } catch (error) {
-    console.error('Error recording time session:', error);
-    return NextResponse.json({ error: 'Failed to record time session' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to record session' }, { status: 500 });
   }
 }

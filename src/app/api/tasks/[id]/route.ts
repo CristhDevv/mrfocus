@@ -1,160 +1,138 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import { Task, Subtask } from '@/types';
+import { getAuthUser } from '@/lib/auth';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = params;
-    const taskRow = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(id) as Record<string, unknown> | undefined;
-
+    const taskRow = db.prepare('SELECT * FROM tasks WHERE id = ?').get(params.id) as any;
     if (!taskRow) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 
-    const subtaskRows = db.prepare(`SELECT * FROM subtasks WHERE task_id = ? ORDER BY order_index ASC`).all(id) as Array<{
-      id: string;
-      task_id: string;
-      title: string;
-      completed: number;
-    }>;
+    const subtaskRows = db.prepare('SELECT * FROM subtasks WHERE task_id = ? ORDER BY order_index ASC').all(params.id) as any[];
+    const subtasks: Subtask[] = subtaskRows.map((st) => ({
+      id: st.id,
+      taskId: st.task_id,
+      title: st.title,
+      completed: Boolean(st.completed),
+    }));
 
     const task: Task = {
-      id: taskRow.id as string,
-      title: taskRow.title as string,
-      description: (taskRow.description as string) || undefined,
-      projectId: (taskRow.project_id as string) || undefined,
-      priority: taskRow.priority as Task['priority'],
-      status: taskRow.status as Task['status'],
-      dueDate: (taskRow.due_date as string) || undefined,
-      dueTime: (taskRow.due_time as string) || undefined,
-      estimatedMinutes: (taskRow.estimated_minutes as number) || 30,
-      actualMinutes: (taskRow.actual_minutes as number) || 0,
-      tags: taskRow.tags ? JSON.parse(taskRow.tags as string) : [],
-      recurrenceRule: (taskRow.recurrence_rule as string) || undefined,
-      subtasks: subtaskRows.map((st) => ({
-        id: st.id,
-        taskId: st.task_id,
-        title: st.title,
-        completed: Boolean(st.completed),
-      })),
-      scheduledStart: (taskRow.scheduled_start as string) || undefined,
-      scheduledEnd: (taskRow.scheduled_end as string) || undefined,
-      notes: (taskRow.notes as string) || undefined,
-      createdAt: taskRow.created_at as string,
-      completedAt: (taskRow.completed_at as string) || undefined,
-      orderIndex: (taskRow.order_index as number) || 0,
+      id: taskRow.id,
+      title: taskRow.title,
+      description: taskRow.description || undefined,
+      projectId: taskRow.project_id || undefined,
+      priority: taskRow.priority,
+      status: taskRow.status,
+      dueDate: taskRow.due_date || undefined,
+      dueTime: taskRow.due_time || undefined,
+      estimatedMinutes: taskRow.estimated_minutes,
+      actualMinutes: taskRow.actual_minutes,
+      tags: taskRow.tags ? (typeof taskRow.tags === 'string' ? JSON.parse(taskRow.tags) : taskRow.tags) : [],
+      recurrenceRule: taskRow.recurrence_rule || undefined,
+      subtasks,
+      scheduledStart: taskRow.scheduled_start || undefined,
+      scheduledEnd: taskRow.scheduled_end || undefined,
+      notes: taskRow.notes || undefined,
+      createdAt: taskRow.created_at,
+      completedAt: taskRow.completed_at || undefined,
+      orderIndex: taskRow.order_index,
     };
 
     return NextResponse.json({ task });
   } catch (error) {
-    console.error('Error fetching task:', error);
     return NextResponse.json({ error: 'Failed to fetch task' }, { status: 500 });
   }
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = params;
-    const existing = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(id) as Record<string, unknown> | undefined;
-
+    const body = await req.json();
+    const existing = db.prepare('SELECT * FROM tasks WHERE id = ?').get(params.id) as any;
     if (!existing) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 
-    const body = await req.json();
-    const updates: string[] = [];
-    const values: unknown[] = [];
+    const title = body.title !== undefined ? body.title : existing.title;
+    const description = body.description !== undefined ? body.description : existing.description;
+    const projectId = body.projectId !== undefined ? body.projectId : existing.project_id;
+    const priority = body.priority !== undefined ? body.priority : existing.priority;
+    const status = body.status !== undefined ? body.status : existing.status;
+    const dueDate = body.dueDate !== undefined ? body.dueDate : existing.due_date;
+    const dueTime = body.dueTime !== undefined ? body.dueTime : existing.due_time;
+    const estimatedMinutes = body.estimatedMinutes !== undefined ? body.estimatedMinutes : existing.estimated_minutes;
+    const actualMinutes = body.actualMinutes !== undefined ? body.actualMinutes : existing.actual_minutes;
+    const tags = body.tags !== undefined ? JSON.stringify(body.tags) : existing.tags;
+    const recurrenceRule = body.recurrenceRule !== undefined ? body.recurrenceRule : existing.recurrence_rule;
+    const scheduledStart = body.scheduledStart !== undefined ? body.scheduledStart : existing.scheduled_start;
+    const scheduledEnd = body.scheduledEnd !== undefined ? body.scheduledEnd : existing.scheduled_end;
+    const notes = body.notes !== undefined ? body.notes : existing.notes;
+    const completedAt = status === 'done' && existing.status !== 'done' ? new Date().toISOString() : status !== 'done' ? null : existing.completed_at;
 
-    const fieldMap: Record<string, string> = {
-      title: 'title',
-      description: 'description',
-      projectId: 'project_id',
-      priority: 'priority',
-      status: 'status',
-      dueDate: 'due_date',
-      dueTime: 'due_time',
-      estimatedMinutes: 'estimated_minutes',
-      actualMinutes: 'actual_minutes',
-      recurrenceRule: 'recurrence_rule',
-      scheduledStart: 'scheduled_start',
-      scheduledEnd: 'scheduled_end',
-      notes: 'notes',
-      orderIndex: 'order_index',
-    };
+    db.prepare(`
+      UPDATE tasks SET
+        title = ?, description = ?, project_id = ?, priority = ?, status = ?,
+        due_date = ?, due_time = ?, estimated_minutes = ?, actual_minutes = ?,
+        tags = ?, recurrence_rule = ?, scheduled_start = ?, scheduled_end = ?,
+        notes = ?, completed_at = ?
+      WHERE id = ?
+    `).run(
+      title, description, projectId, priority, status,
+      dueDate, dueTime, estimatedMinutes, actualMinutes,
+      tags, recurrenceRule, scheduledStart, scheduledEnd,
+      notes, completedAt, params.id
+    );
 
-    Object.keys(fieldMap).forEach((key) => {
-      if (body[key] !== undefined) {
-        updates.push(`${fieldMap[key]} = ?`);
-        values.push(body[key]);
-      }
-    });
-
-    if (body.tags !== undefined) {
-      updates.push('tags = ?');
-      values.push(JSON.stringify(body.tags));
+    try {
+      await supabase.from('tasks').update({
+        title, description, project_id: projectId, priority, status,
+        due_date: dueDate, due_time: dueTime, estimated_minutes: estimatedMinutes, actual_minutes: actualMinutes,
+        tags: typeof tags === 'string' ? JSON.parse(tags) : tags, recurrence_rule: recurrenceRule,
+        scheduled_start: scheduledStart, scheduled_end: scheduledEnd, notes, completed_at: completedAt
+      }).eq('id', params.id);
+    } catch (e) {
+      console.warn('Supabase update notice:', e);
     }
 
-    if (body.status !== undefined) {
-      if (body.status === 'done' && existing.status !== 'done') {
-        const completedAt = new Date().toISOString();
-        updates.push('completed_at = ?');
-        values.push(completedAt);
-      } else if (body.status !== 'done') {
-        updates.push('completed_at = ?');
-        values.push(null);
-      }
-    }
-
-    if (updates.length > 0) {
-      values.push(id);
-      db.prepare(`UPDATE tasks SET ${updates.join(', ')} WHERE id = ?`).run(...values);
-    }
-
-    if (body.subtasks !== undefined && Array.isArray(body.subtasks)) {
-      db.prepare(`DELETE FROM subtasks WHERE task_id = ?`).run(id);
-      const insertSubtask = db.prepare(`
-        INSERT INTO subtasks (id, task_id, title, completed, order_index)
-        VALUES (?, ?, ?, ?, ?)
-      `);
-      body.subtasks.forEach((st: { id?: string; title: string; completed?: boolean }, idx: number) => {
-        const stId = st.id || `st_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-        insertSubtask.run(stId, id, st.title, st.completed ? 1 : 0, idx);
+    if (body.subtasks && Array.isArray(body.subtasks)) {
+      db.prepare('DELETE FROM subtasks WHERE task_id = ?').run(params.id);
+      const insertSt = db.prepare('INSERT INTO subtasks (id, task_id, title, completed, order_index) VALUES (?, ?, ?, ?, ?)');
+      body.subtasks.forEach((st: any, idx: number) => {
+        const stId = st.id || `st_${Date.now()}_${idx}`;
+        insertSt.run(stId, params.id, st.title, st.completed ? 1 : 0, idx);
       });
     }
 
-    const updated = db.prepare(`SELECT * FROM tasks WHERE id = ?`).get(id) as Record<string, unknown>;
-    const subtaskRows = db.prepare(`SELECT * FROM subtasks WHERE task_id = ? ORDER BY order_index ASC`).all(id) as Array<{
-      id: string;
-      task_id: string;
-      title: string;
-      completed: number;
-    }>;
+    const updated = db.prepare('SELECT * FROM tasks WHERE id = ?').get(params.id) as any;
+    const subtaskRows = db.prepare('SELECT * FROM subtasks WHERE task_id = ? ORDER BY order_index ASC').all(params.id) as any[];
 
     const task: Task = {
-      id: updated.id as string,
-      title: updated.title as string,
-      description: (updated.description as string) || undefined,
-      projectId: (updated.project_id as string) || undefined,
-      priority: updated.priority as Task['priority'],
-      status: updated.status as Task['status'],
-      dueDate: (updated.due_date as string) || undefined,
-      dueTime: (updated.due_time as string) || undefined,
-      estimatedMinutes: (updated.estimated_minutes as number) || 30,
-      actualMinutes: (updated.actual_minutes as number) || 0,
-      tags: updated.tags ? JSON.parse(updated.tags as string) : [],
-      recurrenceRule: (updated.recurrence_rule as string) || undefined,
+      id: updated.id,
+      title: updated.title,
+      description: updated.description || undefined,
+      projectId: updated.project_id || undefined,
+      priority: updated.priority,
+      status: updated.status,
+      dueDate: updated.due_date || undefined,
+      dueTime: updated.due_time || undefined,
+      estimatedMinutes: updated.estimated_minutes,
+      actualMinutes: updated.actual_minutes,
+      tags: updated.tags ? (typeof updated.tags === 'string' ? JSON.parse(updated.tags) : updated.tags) : [],
+      recurrenceRule: updated.recurrence_rule || undefined,
       subtasks: subtaskRows.map((st) => ({
         id: st.id,
         taskId: st.task_id,
         title: st.title,
         completed: Boolean(st.completed),
       })),
-      scheduledStart: (updated.scheduled_start as string) || undefined,
-      scheduledEnd: (updated.scheduled_end as string) || undefined,
-      notes: (updated.notes as string) || undefined,
-      createdAt: updated.created_at as string,
-      completedAt: (updated.completed_at as string) || undefined,
-      orderIndex: (updated.order_index as number) || 0,
+      scheduledStart: updated.scheduled_start || undefined,
+      scheduledEnd: updated.scheduled_end || undefined,
+      notes: updated.notes || undefined,
+      createdAt: updated.created_at,
+      completedAt: updated.completed_at || undefined,
+      orderIndex: updated.order_index,
     };
 
     return NextResponse.json({ task });
@@ -166,17 +144,18 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = params;
-    db.prepare(`DELETE FROM subtasks WHERE task_id = ?`).run(id);
-    const result = db.prepare(`DELETE FROM tasks WHERE id = ?`).run(id);
+    db.prepare('DELETE FROM subtasks WHERE task_id = ?').run(params.id);
+    db.prepare('DELETE FROM tasks WHERE id = ?').run(params.id);
 
-    if (result.changes === 0) {
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+    try {
+      await supabase.from('subtasks').delete().eq('task_id', params.id);
+      await supabase.from('tasks').delete().eq('id', params.id);
+    } catch (e) {
+      console.warn('Supabase delete notice:', e);
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting task:', error);
     return NextResponse.json({ error: 'Failed to delete task' }, { status: 500 });
   }
 }

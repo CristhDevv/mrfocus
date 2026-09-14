@@ -8,7 +8,8 @@ if (!fs.existsSync(dataDir)) {
 
 const dbFilePath = path.join(dataDir, 'mrfocus_db.json');
 
-interface DbState {
+export interface DbState {
+  users: Array<Record<string, unknown>>;
   projects: Array<Record<string, unknown>>;
   tasks: Array<Record<string, unknown>>;
   subtasks: Array<Record<string, unknown>>;
@@ -22,6 +23,7 @@ interface DbState {
 }
 
 const defaultState: DbState = {
+  users: [],
   projects: [],
   tasks: [],
   subtasks: [],
@@ -36,7 +38,7 @@ const defaultState: DbState = {
       level: 1,
       xp: 0,
       total_xp: 0,
-      streak_days: 1,
+      streak_days: 0,
       updated_at: new Date().toISOString(),
     },
   ],
@@ -51,6 +53,7 @@ function loadDb(): DbState {
       return {
         ...defaultState,
         ...parsed,
+        users: parsed.users || [],
         gamification_user:
           parsed.gamification_user && parsed.gamification_user.length > 0
             ? parsed.gamification_user
@@ -73,7 +76,6 @@ function saveDb() {
   }
 }
 
-// SQL-compatible Query Builder & Parser for the app's SQLite queries
 export class Statement {
   private query: string;
 
@@ -84,9 +86,26 @@ export class Statement {
   all(...params: unknown[]): Array<Record<string, unknown>> {
     const q = this.query;
 
+    // 0. SELECT * FROM users
+    if (q.includes('FROM users')) {
+      let list = [...(dbState.users || [])];
+      if (q.includes('email = ?')) {
+        const email = String(params[0] || '').toLowerCase().trim();
+        list = list.filter((u) => String(u.email || '').toLowerCase().trim() === email);
+      } else if (q.includes('id = ?')) {
+        const id = params[0];
+        list = list.filter((u) => u.id === id);
+      }
+      return list;
+    }
+
     // 1. SELECT * FROM projects
     if (q.includes('FROM projects')) {
-      const projects = dbState.projects || [];
+      let projects = [...(dbState.projects || [])];
+      if (q.includes('user_id = ?')) {
+        const uid = params[0];
+        projects = projects.filter((p) => p.user_id === uid);
+      }
       return projects.map((p) => {
         const pTasks = (dbState.tasks || []).filter((t) => t.project_id === p.id);
         const completed = pTasks.filter((t) => t.status === 'done').length;
@@ -101,9 +120,12 @@ export class Statement {
     // 2. SELECT * FROM tasks
     if (q.includes('FROM tasks')) {
       let list = [...(dbState.tasks || [])];
-
       let paramIdx = 0;
 
+      if (q.includes('user_id = ?')) {
+        const uid = params[paramIdx++];
+        list = list.filter((t) => t.user_id === uid);
+      }
       if (q.includes('status = ?')) {
         const val = params[paramIdx++];
         list = list.filter((t) => t.status === val);
@@ -125,7 +147,7 @@ export class Statement {
       }
       if (q.includes('(due_date = ? OR due_date < ? OR due_date IS NULL)')) {
         const d1 = params[paramIdx++] as string;
-        const d2 = params[paramIdx++] as string;
+        paramIdx++;
         list = list.filter((t) => !t.due_date || t.due_date <= d1);
       }
       if (q.includes('scheduled_start IS NOT NULL')) {
@@ -183,6 +205,10 @@ export class Statement {
     if (q.includes('FROM calendar_events')) {
       let list = [...(dbState.calendar_events || [])];
       let paramIdx = 0;
+      if (q.includes('user_id = ?')) {
+        const uid = params[paramIdx++];
+        list = list.filter((ev) => ev.user_id === uid);
+      }
       if (q.includes('end_time >= ?')) {
         const start = params[paramIdx++] as string;
         list = list.filter((ev) => String(ev.end_time) >= start);
@@ -201,14 +227,24 @@ export class Statement {
 
     // 5. SELECT * FROM habits
     if (q.includes('FROM habits')) {
-      return [...(dbState.habits || [])];
+      let list = [...(dbState.habits || [])];
+      if (q.includes('user_id = ?')) {
+        const uid = params[0];
+        list = list.filter((h) => h.user_id === uid);
+      }
+      return list;
     }
 
     // 6. SELECT * FROM habit_logs
     if (q.includes('FROM habit_logs')) {
       let list = [...(dbState.habit_logs || [])];
+      let paramIdx = 0;
+      if (q.includes('user_id = ?')) {
+        const uid = params[paramIdx++];
+        list = list.filter((hl) => hl.user_id === uid);
+      }
       if (q.includes('habit_id = ?')) {
-        const hid = params[0];
+        const hid = params[paramIdx++];
         list = list.filter((hl) => hl.habit_id === hid);
       } else if (q.includes('habit_id IN (')) {
         list = list.filter((hl) => params.includes(hl.habit_id));
@@ -220,6 +256,10 @@ export class Statement {
     if (q.includes('FROM time_sessions')) {
       let list = [...(dbState.time_sessions || [])];
       let paramIdx = 0;
+      if (q.includes('user_id = ?')) {
+        const uid = params[paramIdx++];
+        list = list.filter((ts) => ts.user_id === uid);
+      }
       if (q.includes('ts.start_time >= ?')) {
         const start = params[paramIdx++] as string;
         list = list.filter((ts) => String(ts.start_time) >= start);
@@ -259,6 +299,10 @@ export class Statement {
     if (q.includes('FROM notes')) {
       let list = [...(dbState.notes || [])];
       let paramIdx = 0;
+      if (q.includes('user_id = ?')) {
+        const uid = params[paramIdx++];
+        list = list.filter((n) => n.user_id === uid);
+      }
       if (q.includes('task_id = ?')) {
         const tid = params[paramIdx++];
         list = list.filter((n) => n.task_id === tid);
@@ -286,8 +330,12 @@ export class Statement {
   get(...params: unknown[]): Record<string, unknown> | undefined {
     const q = this.query;
 
-    if (q.includes('COUNT(*) as c FROM achievements')) {
-      return { c: (dbState.achievements || []).length };
+    if (q.includes('FROM users WHERE email = ?')) {
+      const email = String(params[0] || '').toLowerCase().trim();
+      return (dbState.users || []).find((u) => String(u.email || '').toLowerCase().trim() === email);
+    }
+    if (q.includes('FROM users WHERE id = ?')) {
+      return (dbState.users || []).find((u) => u.id === params[0]);
     }
     if (q.includes('COUNT(*) as c FROM tasks')) {
       const prefix = params[0] ? (params[0] as string).replace(/%/g, '') : '';
@@ -328,17 +376,6 @@ export class Statement {
     if (q.includes('FROM notes WHERE id = ?')) {
       return (dbState.notes || []).find((n) => n.id === params[0]);
     }
-    if (q.includes('FROM gamification_user')) {
-      const user = (dbState.gamification_user || []).find((u) => u.id === (params[0] || 'default_user'));
-      return user || (dbState.gamification_user || [])[0] || {
-        id: 'default_user',
-        level: 1,
-        xp: 0,
-        total_xp: 0,
-        streak_days: 1,
-        updated_at: new Date().toISOString(),
-      };
-    }
 
     const allRes = this.all(...params);
     return allRes[0];
@@ -348,21 +385,21 @@ export class Statement {
     const q = this.query;
     let changes = 0;
 
+    // INSERT INTO users
+    if (q.startsWith('INSERT INTO users')) {
+      const [id, email, password_hash, name, created_at, updated_at] = params;
+      dbState.users = dbState.users || [];
+      dbState.users.push({ id, email, password_hash, name, created_at, updated_at });
+      changes = 1;
+    }
     // INSERT INTO tasks
-    if (q.startsWith('INSERT INTO tasks')) {
-      const [
-        id, title, description, project_id, priority, status,
-        due_date, due_time, estimated_minutes, actual_minutes,
-        tags, recurrence_rule, scheduled_start, scheduled_end,
-        notes, created_at, completed_at, order_index
-      ] = params;
-
-      dbState.tasks.push({
-        id, title, description, project_id, priority, status,
-        due_date, due_time, estimated_minutes, actual_minutes,
-        tags, recurrence_rule, scheduled_start, scheduled_end,
-        notes, created_at, completed_at, order_index
+    else if (q.startsWith('INSERT INTO tasks')) {
+      const cols = q.slice(q.indexOf('(') + 1, q.indexOf(')')).split(',').map((c) => c.trim());
+      const taskObj: Record<string, unknown> = {};
+      cols.forEach((col, idx) => {
+        taskObj[col] = params[idx];
       });
+      dbState.tasks.push(taskObj);
       changes = 1;
     }
     // UPDATE tasks
@@ -416,8 +453,12 @@ export class Statement {
     }
     // INSERT INTO calendar_events
     else if (q.startsWith('INSERT INTO calendar_events')) {
-      const [id, title, description, start_time, end_time, is_all_day, color, location, project_id] = params;
-      dbState.calendar_events.push({ id, title, description, start_time, end_time, is_all_day, color, location, project_id });
+      const cols = q.slice(q.indexOf('(') + 1, q.indexOf(')')).split(',').map((c) => c.trim());
+      const evObj: Record<string, unknown> = {};
+      cols.forEach((col, idx) => {
+        evObj[col] = params[idx];
+      });
+      dbState.calendar_events.push(evObj);
       changes = 1;
     }
     // UPDATE calendar_events
@@ -446,8 +487,12 @@ export class Statement {
     }
     // INSERT INTO habits
     else if (q.startsWith('INSERT INTO habits')) {
-      const [id, name, icon, category, frequency, target_days_per_week, streak, best_streak, created_at] = params;
-      dbState.habits.push({ id, name, icon, category, frequency, target_days_per_week, streak, best_streak, created_at });
+      const cols = q.slice(q.indexOf('(') + 1, q.indexOf(')')).split(',').map((c) => c.trim());
+      const habObj: Record<string, unknown> = {};
+      cols.forEach((col, idx) => {
+        habObj[col] = params[idx];
+      });
+      dbState.habits.push(habObj);
       changes = 1;
     }
     // UPDATE habits
@@ -481,8 +526,12 @@ export class Statement {
     }
     // INSERT INTO habit_logs
     else if (q.startsWith('INSERT INTO habit_logs')) {
-      const [id, habit_id, completed_date, created_at] = params;
-      dbState.habit_logs.push({ id, habit_id, completed_date, created_at });
+      const cols = q.slice(q.indexOf('(') + 1, q.indexOf(')')).split(',').map((c) => c.trim());
+      const logObj: Record<string, unknown> = {};
+      cols.forEach((col, idx) => {
+        logObj[col] = params[idx];
+      });
+      dbState.habit_logs.push(logObj);
       changes = 1;
     }
     // DELETE FROM habit_logs
@@ -503,8 +552,12 @@ export class Statement {
     }
     // INSERT INTO time_sessions
     else if (q.startsWith('INSERT INTO time_sessions')) {
-      const [id, task_id, project_id, type, start_time, end_time, duration_minutes, notes, created_at] = params;
-      dbState.time_sessions.push({ id, task_id, project_id, type, start_time, end_time, duration_minutes, notes, created_at });
+      const cols = q.slice(q.indexOf('(') + 1, q.indexOf(')')).split(',').map((c) => c.trim());
+      const sessObj: Record<string, unknown> = {};
+      cols.forEach((col, idx) => {
+        sessObj[col] = params[idx];
+      });
+      dbState.time_sessions.push(sessObj);
       changes = 1;
     }
     // DELETE FROM time_sessions
@@ -514,8 +567,12 @@ export class Statement {
     }
     // INSERT INTO notes
     else if (q.startsWith('INSERT INTO notes')) {
-      const [id, title, content, task_id, project_id, tags, updated_at, created_at] = params;
-      dbState.notes.push({ id, title, content, task_id, project_id, tags, updated_at, created_at });
+      const cols = q.slice(q.indexOf('(') + 1, q.indexOf(')')).split(',').map((c) => c.trim());
+      const noteObj: Record<string, unknown> = {};
+      cols.forEach((col, idx) => {
+        noteObj[col] = params[idx];
+      });
+      dbState.notes.push(noteObj);
       changes = 1;
     }
     // UPDATE notes
@@ -544,63 +601,17 @@ export class Statement {
     }
     // INSERT INTO projects
     else if (q.startsWith('INSERT INTO projects')) {
-      const [id, name, color, icon, description, created_at] = params;
-      dbState.projects.push({ id, name, color, icon, description, created_at });
+      const cols = q.slice(q.indexOf('(') + 1, q.indexOf(')')).split(',').map((c) => c.trim());
+      const projObj: Record<string, unknown> = {};
+      cols.forEach((col, idx) => {
+        projObj[col] = params[idx];
+      });
+      dbState.projects.push(projObj);
       changes = 1;
     }
     // DELETE FROM projects
     else if (q.startsWith('DELETE FROM projects')) {
       dbState.projects = [];
-      changes = 1;
-    }
-    // INSERT / UPDATE gamification_user
-    else if (q.startsWith('INSERT INTO gamification_user')) {
-      let id = 'default_user';
-      let level = 1;
-      let xp = 0;
-      let total_xp = 0;
-      let streak_days = 1;
-      let updated_at = new Date().toISOString();
-
-      if (params.length === 6) {
-        [id, level, xp, total_xp, streak_days, updated_at] = params as [string, number, number, number, number, string];
-      } else if (params.length === 1) {
-        updated_at = params[0] as string;
-      }
-
-      dbState.gamification_user = [{ id, level, xp, total_xp, streak_days, updated_at }];
-      changes = 1;
-    } else if (q.startsWith('UPDATE gamification_user')) {
-      const user = dbState.gamification_user.find((u) => u.id === 'default_user') || {
-        id: 'default_user',
-        level: 1,
-        xp: 0,
-        total_xp: 0,
-        streak_days: 1,
-        updated_at: new Date().toISOString(),
-      };
-      if (q.includes('xp = xp + ?, total_xp = total_xp + ?, updated_at = ?')) {
-        user.xp = Number(user.xp || 0) + Number(params[0]);
-        user.total_xp = Number(user.total_xp || 0) + Number(params[1]);
-        user.updated_at = params[2] as string;
-      } else if (q.includes('level = ?, updated_at = ?')) {
-        user.level = Number(params[0]);
-        user.updated_at = params[1] as string;
-      }
-      if (!dbState.gamification_user.some((u) => u.id === 'default_user')) {
-        dbState.gamification_user.push(user);
-      }
-      changes = 1;
-    }
-    // INSERT INTO achievements
-    else if (q.startsWith('INSERT INTO achievements')) {
-      const [id, title, description, icon, unlocked, unlocked_at, progress, category] = params;
-      dbState.achievements.push({ id, title, description, icon, unlocked, unlocked_at, progress, category });
-      changes = 1;
-    }
-    // DELETE FROM achievements
-    else if (q.startsWith('DELETE FROM achievements')) {
-      dbState.achievements = [];
       changes = 1;
     }
 
@@ -614,13 +625,9 @@ class DbWrapper {
     return new Statement(sql);
   }
 
-  exec(sql: string): void {
-    // No-op for CREATE TABLE, schema is in memory
-  }
+  exec(sql: string): void {}
 
-  pragma(pragma: string): void {
-    // No-op
-  }
+  pragma(pragma: string): void {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transaction<T extends (...args: any[]) => any>(fn: T): T {

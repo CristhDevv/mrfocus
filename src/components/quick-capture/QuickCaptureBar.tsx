@@ -23,12 +23,14 @@ interface QuickCaptureBarProps {
   onTaskCreated?: (task: Task) => void;
   autoFocus?: boolean;
   compact?: boolean;
+  defaultDueDate?: string;
 }
 
 export function QuickCaptureBar({
   onTaskCreated,
   autoFocus = false,
   compact = false,
+  defaultDueDate,
 }: QuickCaptureBarProps) {
   const [input, setInput] = useState('');
   const [projects, setProjects] = useState<Project[]>([]);
@@ -68,7 +70,10 @@ export function QuickCaptureBar({
       const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ naturalLanguageText: input }),
+        body: JSON.stringify({
+          naturalLanguageText: input,
+          defaultDueDate: defaultDueDate || undefined,
+        }),
       });
 
       if (res.ok) {
@@ -148,10 +153,10 @@ export function QuickCaptureBar({
             <span>Detectado:</span>
           </span>
 
-          {parsed.dueDate && (
+          {(parsed.dueDate || defaultDueDate) && (
             <span className="inline-flex items-center space-x-1 rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 border border-slate-200">
               <Calendar className="h-3 w-3 text-slate-500" />
-              <span>Fecha: {parsed.dueDate}</span>
+              <span>Fecha: {parsed.dueDate || 'Hoy'}</span>
             </span>
           )}
 

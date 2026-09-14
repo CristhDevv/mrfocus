@@ -80,6 +80,7 @@ export function QuickCaptureModal({
 
           <QuickCaptureBar
             autoFocus={true}
+            defaultDueDate={new Date().toISOString().split('T')[0]}
             onTaskCreated={(task) => {
               if (onTaskCreated) onTaskCreated(task);
               onClose();

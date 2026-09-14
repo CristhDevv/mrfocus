@@ -1,20 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import { Task, Subtask } from '@/types';
 import { parseNaturalLanguageTask } from '@/lib/nlp-parser';
+import { getAuthUser } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   try {
+    const authUser = getAuthUser(req);
+    const userId = authUser ? authUser.id : 'default_user';
+
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status');
     const projectId = searchParams.get('projectId');
     const priority = searchParams.get('priority');
     const dueDate = searchParams.get('dueDate');
     const search = searchParams.get('search');
-    const scheduled = searchParams.get('scheduled'); // 'true' | 'false'
+    const scheduled = searchParams.get('scheduled');
 
-    let query = `SELECT * FROM tasks WHERE 1=1`;
-    const params: (string | number)[] = [];
+    let query = `SELECT * FROM tasks WHERE user_id = ?`;
+    const params: (string | number)[] = [userId];
 
     if (status) {
       query += ` AND status = ?`;
@@ -65,7 +70,6 @@ export async function GET(req: NextRequest) {
       order_index: number;
     }>;
 
-    // Fetch all subtasks for these tasks in a single query
     const taskIds = rows.map((r) => r.id);
     let subtasksMap: Record<string, Subtask[]> = {};
 
@@ -105,7 +109,7 @@ export async function GET(req: NextRequest) {
       dueTime: r.due_time || undefined,
       estimatedMinutes: r.estimated_minutes,
       actualMinutes: r.actual_minutes,
-      tags: r.tags ? JSON.parse(r.tags) : [],
+      tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
       recurrenceRule: r.recurrence_rule || undefined,
       subtasks: subtasksMap[r.id] || [],
       scheduledStart: r.scheduled_start || undefined,
@@ -125,6 +129,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const authUser = getAuthUser(req);
+    const userId = authUser ? authUser.id : 'default_user';
+
     const body = await req.json();
     let {
       title,
@@ -142,20 +149,22 @@ export async function POST(req: NextRequest) {
       scheduledEnd,
       notes,
       naturalLanguageText,
+      defaultDueDate,
     } = body;
 
-    // If natural language text provided, parse it
     if (naturalLanguageText) {
-      const projects = db.prepare(`SELECT * FROM projects`).all() as Array<{ id: string; name: string; color: string; icon: string }>;
+      const projects = db.prepare(`SELECT * FROM projects WHERE user_id = ?`).all(userId) as Array<{ id: string; name: string; color: string; icon: string }>;
       const parsed = parseNaturalLanguageTask(naturalLanguageText, projects);
       title = parsed.title;
-      dueDate = parsed.dueDate || dueDate;
+      dueDate = parsed.dueDate || defaultDueDate || dueDate;
       dueTime = parsed.dueTime || dueTime;
       recurrenceRule = parsed.recurrenceRule || recurrenceRule;
       priority = parsed.priority || priority;
       projectId = parsed.projectId || projectId;
       tags = parsed.tags.length > 0 ? parsed.tags : tags;
       estimatedMinutes = parsed.estimatedMinutes || estimatedMinutes;
+    } else if (!dueDate && defaultDueDate) {
+      dueDate = defaultDueDate;
     }
 
     if (!title || !title.trim()) {
@@ -167,15 +176,16 @@ export async function POST(req: NextRequest) {
 
     const insertTask = db.prepare(`
       INSERT INTO tasks (
-        id, title, description, project_id, priority, status,
+        id, user_id, title, description, project_id, priority, status,
         due_date, due_time, estimated_minutes, actual_minutes,
         tags, recurrence_rule, scheduled_start, scheduled_end,
         notes, created_at, order_index
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     insertTask.run(
       id,
+      userId,
       title.trim(),
       description || null,
       projectId || null,
@@ -194,7 +204,31 @@ export async function POST(req: NextRequest) {
       0
     );
 
-    // Insert subtasks if any
+    try {
+      await supabase.from('tasks').insert({
+        id,
+        user_id: userId,
+        title: title.trim(),
+        description: description || null,
+        project_id: projectId || null,
+        priority,
+        status,
+        due_date: dueDate || null,
+        due_time: dueTime || null,
+        estimated_minutes: estimatedMinutes,
+        actual_minutes: 0,
+        tags,
+        recurrence_rule: recurrenceRule || null,
+        scheduled_start: scheduledStart || null,
+        scheduled_end: scheduledEnd || null,
+        notes: notes || null,
+        created_at: now,
+        order_index: 0,
+      });
+    } catch (err) {
+      console.warn('Supabase task insert notice:', err);
+    }
+
     const createdSubtasks: Subtask[] = [];
     if (Array.isArray(subtasks) && subtasks.length > 0) {
       const insertSubtask = db.prepare(`

@@ -167,8 +167,9 @@ export default function TodayDashboard() {
       {/* Quick NLP Task Capture Bar */}
       <div>
         <QuickCaptureBar
+          defaultDueDate={todayStr}
           onTaskCreated={(newTask) => {
-            setTasks([newTask, ...tasks]);
+            setTasks((prev) => [newTask, ...prev.filter((t) => t.id !== newTask.id)]);
             loadDashboardData();
           }}
         />

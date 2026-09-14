@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePomodoro } from '../pomodoro/PomodoroContext';
+import { useAuth } from '../auth/AuthContext';
 import {
   CheckSquare,
   Bell,
@@ -13,6 +14,8 @@ import {
   Calendar,
   Layers,
   Plus,
+  LogOut,
+  Shield,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -25,8 +28,12 @@ export function Header({
   onOpenDailyPlanning,
 }: HeaderProps) {
   const { isRunning, timeLeft, startTimer, pauseTimer, formatTime } = usePomodoro();
+  const { user, logout } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
+
+  const initialLetter = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
@@ -88,21 +95,21 @@ export function Header({
           </button>
 
           {/* Active Focus Timer Pill */}
-          <div className={`flex items-center rounded-xl border px-2.5 py-1.5 sm:px-3 text-xs font-medium transition-all ${
+          <div className={"flex items-center rounded-xl border px-2.5 py-1.5 sm:px-3 text-xs font-medium transition-all " + (
             isRunning
-              ? 'border-[#a7f3d0] bg-[#ecfdf5] text-[#059669] shadow-xs'
-              : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
-          }`}>
+              ? "border-[#a7f3d0] bg-[#ecfdf5] text-[#059669] shadow-xs"
+              : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+          )}>
             <Link href="/focus" className="flex items-center space-x-1.5 hover:text-[#18181B]">
-              <Timer className={`h-3.5 w-3.5 ${isRunning ? 'animate-pulse text-[#059669]' : 'text-slate-400'}`} />
-              <span className={`font-mono text-xs sm:text-xs font-semibold ${isRunning ? 'text-[#059669]' : 'text-slate-800'}`}>
+              <Timer className={"h-3.5 w-3.5 " + (isRunning ? "animate-pulse text-[#059669]" : "text-slate-400")} />
+              <span className={"font-mono text-xs sm:text-xs font-semibold " + (isRunning ? "text-[#059669]" : "text-slate-800")}>
                 {formatTime(timeLeft)}
               </span>
             </Link>
             <button
               onClick={isRunning ? pauseTimer : startTimer}
-              className={`ml-1.5 sm:ml-2 ${isRunning ? 'text-[#059669] hover:text-[#047857]' : 'text-slate-500 hover:text-slate-900'}`}
-              title={isRunning ? 'Pausar temporizador' : 'Iniciar temporizador'}
+              className={"ml-1.5 sm:ml-2 " + (isRunning ? "text-[#059669] hover:text-[#047857]" : "text-slate-500 hover:text-slate-900")}
+              title={isRunning ? "Pausar temporizador" : "Iniciar temporizador"}
             >
               {isRunning ? <Pause className="h-3 w-3 fill-current" /> : <Play className="h-3 w-3 fill-current" />}
             </button>
@@ -113,6 +120,7 @@ export function Header({
             <button
               onClick={() => {
                 setShowNotifications(!showNotifications);
+                setShowUserMenu(false);
                 setHasUnread(false);
               }}
               className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors"
@@ -138,6 +146,57 @@ export function Header({
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* User Profile Badge & Menu */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowUserMenu(!showUserMenu);
+                setShowNotifications(false);
+              }}
+              className="flex items-center space-x-2 rounded-xl border border-slate-200 bg-white p-1 sm:px-2.5 sm:py-1.5 hover:bg-slate-50 transition-all"
+              title="Perfil y Entorno"
+            >
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#18181B] text-white text-xs font-bold">
+                {initialLetter}
+              </div>
+              <span className="hidden sm:block text-xs font-semibold text-[#18181B] max-w-[100px] truncate">
+                {user?.name || 'Usuario'}
+              </span>
+            </button>
+
+            {showUserMenu && (
+              <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xl z-50 space-y-3">
+                <div className="border-b border-slate-100 pb-3">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#18181B] text-white font-bold text-sm">
+                      {initialLetter}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-xs font-bold text-[#18181B] truncate">{user?.name}</h4>
+                      <p className="text-[11px] text-[#475569] truncate font-medium">{user?.email}</p>
+                    </div>
+                  </div>
+                  <div className="mt-2.5 inline-flex items-center space-x-1.5 rounded-lg bg-[#ecfdf5] px-2 py-0.5 text-[10px] font-bold text-[#059669]">
+                    <Shield className="h-3 w-3" />
+                    <span>Entorno Privado Activo</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    logout();
+                  }}
+                  className="w-full flex items-center space-x-2 rounded-xl px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Cerrar Sesión</span>
+                </button>
               </div>
             )}
           </div>
