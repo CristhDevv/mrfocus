@@ -98,63 +98,63 @@ export function AnalyticsDashboard({
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Tiempo de Foco</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-[#18181B]">
-              <Clock className="h-4 w-4" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Tiempo de Foco</span>
+            <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-slate-100 text-[#18181B]">
+              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </div>
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-[#18181B]">
+          <p className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-extrabold text-[#18181B]">
             {formatMinutes(totalMinutes)}
           </p>
-          <span className="text-xs font-medium text-slate-500 mt-0.5 block">
+          <span className="text-[10px] sm:text-xs font-medium text-slate-500 mt-0.5 block truncate">
             {allSessions.length} {allSessions.length === 1 ? 'sesión' : 'sesiones'}
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Sesiones Pomodoro</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-[#18181B]">
-              <Target className="h-4 w-4" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Pomodoros</span>
+            <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-slate-100 text-[#18181B]">
+              <Target className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </div>
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-[#18181B]">
+          <p className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-extrabold text-[#18181B]">
             {pomodoroSessionsCount}
           </p>
-          <span className="text-xs font-medium text-slate-500 mt-0.5 block">
+          <span className="text-[10px] sm:text-xs font-medium text-slate-500 mt-0.5 block truncate">
             {pomodoroSessionsCount * 25} minutos
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Precisión</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#ecfdf5] text-[#059669]">
-              <TrendingUp className="h-4 w-4" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Precisión</span>
+            <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-[#ecfdf5] text-[#059669]">
+              <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </div>
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-[#18181B]">
+          <p className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-extrabold text-[#18181B]">
             {accuracyRatio}%
           </p>
-          <span className="text-xs font-medium text-slate-500 mt-0.5 block">
+          <span className="text-[10px] sm:text-xs font-medium text-slate-500 mt-0.5 block truncate">
             Real vs Estimado
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 sm:p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Tareas Hechas</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#ecfdf5] text-[#059669]">
-              <ArrowUpRight className="h-4 w-4" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Hechas</span>
+            <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-[#ecfdf5] text-[#059669]">
+              <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </div>
           </div>
-          <p className="mt-2 text-2xl font-extrabold text-[#18181B]">
+          <p className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-extrabold text-[#18181B]">
             {completedTasks.length}
           </p>
-          <span className="text-xs font-medium text-slate-500 mt-0.5 block">
+          <span className="text-[10px] sm:text-xs font-medium text-slate-500 mt-0.5 block truncate">
             Completadas
           </span>
         </div>

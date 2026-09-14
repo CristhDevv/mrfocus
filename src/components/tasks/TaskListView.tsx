@@ -138,7 +138,7 @@ export function TaskListView({
       {/* Search & Filter Header Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Filter Tabs */}
-        <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+        <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none -mx-1 px-1">
           {[
             { id: 'all', label: 'Todas', count: tasks.length },
             { id: 'today', label: 'Hoy', count: tasks.filter((t) => t.status !== 'done' && t.dueDate === todayStr).length },
@@ -151,7 +151,7 @@ export function TaskListView({
               <button
                 key={tab.id}
                 onClick={() => setFilterTab(tab.id as typeof filterTab)}
-                className={`flex items-center space-x-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all whitespace-nowrap ${
+                className={`flex items-center space-x-1.5 sm:space-x-2 rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-semibold transition-all whitespace-nowrap shrink-0 ${
                   isActive
                     ? 'bg-[#18181B] text-white shadow-xs'
                     : 'text-[#475569] bg-white hover:bg-slate-100 hover:text-[#18181B] border border-slate-200'
@@ -171,11 +171,11 @@ export function TaskListView({
         </div>
 
         {/* Project and Priority dropdown filters */}
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-2">
           <select
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B]"
+            className="flex-1 sm:flex-initial rounded-lg border border-slate-200 bg-white px-2.5 sm:px-3 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B]"
           >
             <option value="all">Todos los proyectos</option>
             {projects.map((p) => (
@@ -188,7 +188,7 @@ export function TaskListView({
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B]"
+            className="flex-1 sm:flex-initial rounded-lg border border-slate-200 bg-white px-2.5 sm:px-3 py-1.5 text-xs font-medium text-slate-700 focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B]"
           >
             <option value="all">Prioridad (Todas)</option>
             <option value="1">Urgente</option>

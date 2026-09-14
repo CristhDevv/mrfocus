@@ -34,7 +34,7 @@ export function HabitHeatmap({
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 gap-2">
         <div>
           <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] flex items-center space-x-2">
@@ -45,7 +45,7 @@ export function HabitHeatmap({
             Frecuencia de hábitos completados por día
           </p>
         </div>
-        <div className="flex items-center space-x-1.5 text-xs text-slate-500 font-medium self-end sm:self-auto">
+        <div className="flex items-center space-x-1.5 text-xs text-slate-500 font-medium self-start sm:self-auto">
           <span>Menos</span>
           <div className="h-3 w-3 rounded-md bg-slate-100 border border-slate-200" />
           <div className="h-3 w-3 rounded-md bg-[#ecfdf5] border border-[#a7f3d0]" />
@@ -57,7 +57,7 @@ export function HabitHeatmap({
       </div>
 
       {/* Grid */}
-      <div className="mt-3 overflow-x-auto pb-1">
+      <div className="mt-3 overflow-x-auto pb-2 scrollbar-none -mx-2 px-2 sm:mx-0 sm:px-0">
         <div className="inline-grid grid-flow-col grid-rows-7 gap-1.5">
           {days.map((day) => {
             const dateStr = format(day, 'yyyy-MM-dd');

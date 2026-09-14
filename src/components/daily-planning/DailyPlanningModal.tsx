@@ -148,19 +148,19 @@ export function DailyPlanningModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-3.5 sm:p-4 backdrop-blur-xs animate-in fade-in duration-150">
+      <div className="w-full max-w-xl max-h-[92vh] flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-          <div className="flex items-center space-x-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#18181B] text-white shadow-xs">
-              <Sparkles className="h-5 w-5 text-[#059669]" />
+        <div className="flex items-center justify-between border-b border-slate-100 px-4 sm:px-6 py-3.5 sm:py-4 shrink-0">
+          <div className="flex items-center space-x-2.5 sm:space-x-3">
+            <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-[#18181B] text-white shadow-xs">
+              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-[#059669]" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-[#18181B]">
+              <h2 className="text-xs sm:text-sm font-bold text-[#18181B]">
                 Planificación de mi Día
               </h2>
-              <p className="text-[11px] font-medium text-[#475569]">
+              <p className="text-[10px] sm:text-[11px] font-medium text-[#475569]">
                 Paso {step} de 4 • Organiza tu jornada con calma
               </p>
             </div>
@@ -169,12 +169,12 @@ export function DailyPlanningModal({
             onClick={onClose}
             className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 max-h-[65vh] overflow-y-auto">
+        <div className="p-4 sm:p-6 flex-1 overflow-y-auto">
           {/* STEP 1: Overview */}
           {step === 1 && (
             <div className="space-y-4">
@@ -295,15 +295,15 @@ export function DailyPlanningModal({
                         </div>
 
                         {isSelected && (
-                          <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                          <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
                             <span className="text-slate-500 font-medium">¿Cuánto tiempo tomará?</span>
-                            <div className="flex items-center space-x-1.5">
+                            <div className="flex flex-wrap items-center gap-1">
                               {[15, 30, 45, 60, 90].map((m) => (
                                 <button
                                   key={m}
                                   type="button"
                                   onClick={() => handleEstimateChange(task.id, m)}
-                                  className={`rounded-md px-2 py-0.5 text-[11px] font-bold transition-all ${
+                                  className={`rounded-md px-2 py-0.5 text-[10px] sm:text-[11px] font-bold transition-all ${
                                     currentEst === m
                                       ? 'bg-[#18181B] text-white shadow-2xs'
                                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -327,12 +327,12 @@ export function DailyPlanningModal({
             <div className="space-y-4">
               {!isDone ? (
                 <>
-                  <div className="rounded-xl bg-white p-5 border border-slate-200 shadow-xs">
-                    <div className="flex items-center justify-between">
+                  <div className="rounded-xl bg-white p-4 sm:p-5 border border-slate-200 shadow-xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                       <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B]">
                         4. Balance de tu Jornada
                       </h3>
-                      <span className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700">
+                      <span className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700 self-start sm:self-auto">
                         {formatMinutes(totalEstimatedMinutes)} de {formatMinutes(availableWorkMinutes)} libres
                       </span>
                     </div>
@@ -375,15 +375,15 @@ export function DailyPlanningModal({
                     </h4>
                     <ul className="mt-2.5 space-y-2 text-xs text-slate-600">
                       <li className="flex items-center space-x-2">
-                        <Check className="h-4 w-4 text-[#059669]" />
+                        <Check className="h-4 w-4 text-[#059669] shrink-0" />
                         <span><strong>{selectedTaskIds.length} tareas</strong> seleccionadas con tiempo estimado</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <Check className="h-4 w-4 text-[#059669]" />
+                        <Check className="h-4 w-4 text-[#059669] shrink-0" />
                         <span><strong>{events.length} reuniones</strong> protegidas sin solapamientos</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <Check className="h-4 w-4 text-[#059669]" />
+                        <Check className="h-4 w-4 text-[#059669] shrink-0" />
                         <span>Ubicación automática en los huecos libres de tu calendario</span>
                       </li>
                     </ul>
@@ -409,7 +409,7 @@ export function DailyPlanningModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex items-center justify-between border-t border-slate-100 bg-[#F8FAFC] px-6 py-4">
+        <div className="flex items-center justify-between border-t border-slate-100 bg-[#F8FAFC] px-4 sm:px-6 py-3.5 sm:py-4 shrink-0">
           {!isDone ? (
             <>
               <button

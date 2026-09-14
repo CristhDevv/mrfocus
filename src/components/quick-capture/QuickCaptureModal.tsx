@@ -35,9 +35,9 @@ export function QuickCaptureModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-900/30 p-4 pt-20 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
-        <div className="flex items-center justify-between pb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-3.5 sm:p-4 backdrop-blur-xs animate-in fade-in duration-150">
+      <div className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
+        <div className="flex items-center justify-between pb-3 sm:pb-4">
           <div className="flex items-center space-x-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#18181B] text-white">
               <CheckSquare className="h-4 w-4" />

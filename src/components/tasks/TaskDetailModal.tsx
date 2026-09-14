@@ -152,10 +152,10 @@ export function TaskDetailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-3.5 sm:p-4 backdrop-blur-xs animate-in fade-in duration-150">
+      <div className="w-full max-w-xl max-h-[92vh] flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-slate-100 px-4 sm:px-6 py-3.5 sm:py-4 shrink-0">
           <div className="flex items-center space-x-2">
             <span className="text-xs font-bold uppercase tracking-wider text-[#475569]">
               Detalles de la Tarea
@@ -179,7 +179,7 @@ export function TaskDetailModal({
         </div>
 
         {/* Body */}
-        <div className="max-h-[70vh] overflow-y-auto p-6 space-y-5">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5">
           {/* Title */}
           <div>
             <input
@@ -187,7 +187,7 @@ export function TaskDetailModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Título de la tarea..."
-              className="w-full text-lg font-bold text-[#18181B] placeholder:text-slate-300 focus:outline-none"
+              className="w-full text-base sm:text-lg font-bold text-[#18181B] placeholder:text-slate-300 focus:outline-none"
             />
           </div>
 
@@ -198,12 +198,12 @@ export function TaskDetailModal({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Descripción o detalles adicionales..."
               rows={2}
-              className="w-full rounded-lg border border-slate-200 bg-[#F8FAFC] p-3 text-xs sm:text-sm text-[#18181B] placeholder:text-slate-400 focus:border-[#18181B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#18181B]"
+              className="w-full rounded-lg border border-slate-200 bg-[#F8FAFC] p-2.5 sm:p-3 text-xs sm:text-sm text-[#18181B] placeholder:text-slate-400 focus:border-[#18181B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#18181B]"
             />
           </div>
 
           {/* Core Properties Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
             {/* Project */}
             <div>
               <label className="text-[11px] font-semibold text-[#475569] uppercase tracking-wider flex items-center space-x-1">
@@ -213,7 +213,7 @@ export function TaskDetailModal({
               <select
                 value={projectId}
                 onChange={(e) => setProjectId(e.target.value)}
-                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-[#F8FAFC] p-2.5 text-xs font-medium text-[#18181B] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B]"
+                className="mt-1.5 w-full rounded-lg border border-slate-200 bg-[#F8FAFC] p-2 sm:p-2.5 text-xs font-medium text-[#18181B] focus:outline-none focus:border-[#18181B] focus:ring-1 focus:ring-[#18181B]"
               >
                 <option value="">(Sin proyecto)</option>
                 {projects.map((p) => (
@@ -230,7 +230,7 @@ export function TaskDetailModal({
                 <AlertCircle className="h-3 w-3 text-slate-500" />
                 <span>Prioridad</span>
               </label>
-              <div className="mt-1.5 grid grid-cols-4 gap-1.5">
+              <div className="mt-1.5 grid grid-cols-4 gap-1 sm:gap-1.5">
                 {([1, 2, 3, 4] as Priority[]).map((p) => {
                   const meta = getPriorityLabel(p);
                   const isSelected = priority === p;
@@ -239,7 +239,7 @@ export function TaskDetailModal({
                       key={p}
                       type="button"
                       onClick={() => setPriority(p)}
-                      className={`rounded-lg py-2 px-1 text-[11px] font-bold border transition-all text-center ${
+                      className={`rounded-lg py-1.5 sm:py-2 px-1 text-[10px] sm:text-[11px] font-bold border transition-all text-center ${
                         isSelected
                           ? `${meta.bg} ${meta.color} ${meta.border} shadow-2xs`
                           : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'

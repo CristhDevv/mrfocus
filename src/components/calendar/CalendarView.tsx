@@ -178,8 +178,8 @@ export function CalendarView({
   return (
     <div className="space-y-4">
       {/* Calendar Header Controls */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3.5 shadow-xs">
-        <div className="flex items-center space-x-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3 sm:p-3.5 shadow-xs">
+        <div className="flex items-center justify-between sm:justify-start space-x-2">
           <div className="flex items-center space-x-1">
             <button
               onClick={handlePrev}
@@ -190,7 +190,7 @@ export function CalendarView({
             </button>
             <button
               onClick={handleToday}
-              className="rounded-lg px-3 py-1.5 text-xs font-semibold text-[#18181B] bg-slate-100 hover:bg-slate-200 transition-colors"
+              className="rounded-lg px-2.5 py-1 text-xs font-semibold text-[#18181B] bg-slate-100 hover:bg-slate-200 transition-colors"
             >
               Hoy
             </button>
@@ -203,19 +203,19 @@ export function CalendarView({
             </button>
           </div>
 
-          <h2 className="text-sm font-bold text-[#18181B] capitalize pl-1">
+          <h2 className="text-xs sm:text-sm font-bold text-[#18181B] capitalize truncate pl-1">
             {format(currentDate, 'EEEE, d MMMM yyyy', { locale: es })}
           </h2>
         </div>
 
         {/* View mode switcher & Action Buttons */}
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center rounded-lg bg-slate-100 p-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center rounded-lg bg-slate-100 p-0.5 sm:p-1">
             {(['day', 'week'] as const).map((mode) => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
-                className={`rounded-md px-3 py-1 text-xs font-semibold transition-all ${
+                className={`rounded-md px-2.5 sm:px-3 py-1 text-xs font-semibold transition-all ${
                   viewMode === mode
                     ? 'bg-white text-[#18181B] shadow-xs'
                     : 'text-[#475569] hover:text-[#18181B]'
@@ -230,7 +230,7 @@ export function CalendarView({
           <button
             onClick={handleAutoSchedule}
             disabled={isAutoScheduling}
-            className="flex items-center space-x-1.5 rounded-lg bg-[#18181B] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-slate-800 transition-all disabled:opacity-50 active:scale-[0.98]"
+            className="flex items-center space-x-1.5 rounded-lg bg-[#18181B] px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-slate-800 transition-all disabled:opacity-50 active:scale-[0.98]"
             title="Ubicar tareas pendientes automáticamente"
           >
             <span>{isAutoScheduling ? 'Organizando...' : 'Auto-Organizar'}</span>
@@ -239,10 +239,10 @@ export function CalendarView({
           {/* Add Event Button */}
           <button
             onClick={() => setShowEventModal(true)}
-            className="flex items-center space-x-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#18181B] hover:bg-slate-50 transition-colors"
+            className="flex items-center space-x-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#18181B] hover:bg-slate-50 transition-colors"
           >
             <Plus className="h-3.5 w-3.5 text-slate-600" />
-            <span>Nuevo Evento</span>
+            <span>Evento</span>
           </button>
         </div>
       </div>
@@ -250,9 +250,9 @@ export function CalendarView({
       {/* Main Grid: Calendar Timeline + Unscheduled Backlog Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Timeline View */}
-        <div className="lg:col-span-3 rounded-xl border border-slate-200 bg-white p-4 shadow-xs overflow-x-auto">
+        <div className="lg:col-span-3 rounded-xl border border-slate-200 bg-white p-3 sm:p-4 shadow-xs overflow-x-auto">
           {viewMode === 'day' ? (
-            <div className="min-w-[400px]">
+            <div className="w-full min-w-0">
               <div className="space-y-1">
                 {HOURS.map((hour) => {
                   const hourFormatted = `${String(hour).padStart(2, '0')}:00`;
@@ -275,27 +275,27 @@ export function CalendarView({
                       key={hour}
                       onDragOver={handleDragOver}
                       onDrop={(e) => handleDropOnHour(e, currentDateStr, hour)}
-                      className="group flex min-h-[58px] border-b border-slate-100 hover:bg-[#F8FAFC] transition-colors rounded-lg p-1.5"
+                      className="group flex min-h-[54px] border-b border-slate-100 hover:bg-[#F8FAFC] transition-colors rounded-lg p-1 sm:p-1.5"
                     >
-                      <div className="w-14 shrink-0 text-xs font-semibold text-slate-400 pt-1">
+                      <div className="w-11 sm:w-14 shrink-0 text-[11px] sm:text-xs font-semibold text-slate-400 pt-1">
                         {hourFormatted}
                       </div>
 
-                      <div className="flex-1 space-y-1.5 pl-2">
+                      <div className="flex-1 space-y-1.5 pl-1.5 sm:pl-2 min-w-0">
                         {hourEvents.map((ev) => (
                           <div
                             key={ev.id}
-                            className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold shadow-2xs transition-transform hover:scale-[1.005]"
+                            className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-semibold shadow-2xs transition-transform hover:scale-[1.005]"
                             style={{
                               backgroundColor: ev.color || '#18181B',
                               color: '#ffffff',
                             }}
                           >
-                            <div className="flex items-center space-x-1.5 truncate">
+                            <div className="flex items-center space-x-1.5 truncate min-w-0 mr-2">
                               <CalendarIcon className="h-3.5 w-3.5 shrink-0 opacity-80" />
                               <span className="truncate">{ev.title}</span>
                             </div>
-                            <span className="text-[11px] font-medium opacity-90 shrink-0">
+                            <span className="text-[10px] sm:text-[11px] font-medium opacity-90 shrink-0">
                               {format(new Date(ev.startTime), 'HH:mm')} - {format(new Date(ev.endTime), 'HH:mm')}
                             </span>
                           </div>
@@ -309,24 +309,24 @@ export function CalendarView({
                             <div
                               key={t.id}
                               onClick={() => onSelectTask(t)}
-                              className={`flex items-center justify-between rounded-lg border p-2.5 text-xs cursor-pointer shadow-2xs transition-all hover:border-slate-300 ${
+                              className={`flex items-center justify-between rounded-lg border p-2 sm:p-2.5 text-xs cursor-pointer shadow-2xs transition-all hover:border-slate-300 ${
                                 isDone
                                   ? 'bg-[#F8FAFC] border-slate-200 text-slate-400'
                                   : 'bg-white border-slate-200 text-[#18181B] hover:shadow-xs'
                               }`}
                             >
-                              <div className="flex items-center space-x-2 truncate">
-                                <span className={`h-2 w-2 rounded-full ${isDone ? 'bg-[#059669]' : 'bg-[#18181B]'}`} />
+                              <div className="flex items-center space-x-2 truncate min-w-0 mr-2">
+                                <span className={`h-2 w-2 rounded-full shrink-0 ${isDone ? 'bg-[#059669]' : 'bg-[#18181B]'}`} />
                                 <span className={`font-semibold truncate ${isDone ? 'line-through text-slate-400' : ''}`}>
                                   {t.title}
                                 </span>
                               </div>
 
-                              <div className="flex items-center space-x-2 shrink-0">
-                                <span className="text-[11px] font-medium text-slate-500">
+                              <div className="flex items-center space-x-1.5 shrink-0">
+                                <span className="text-[10px] sm:text-[11px] font-medium text-slate-500">
                                   {t.scheduledStart && format(new Date(t.scheduledStart), 'HH:mm')} ({formatMinutes(t.estimatedMinutes || 30)})
                                 </span>
-                                <span className={`rounded-md px-2 py-0.5 text-[10px] font-semibold border ${priorityMeta.bg} ${priorityMeta.color} ${priorityMeta.border}`}>
+                                <span className={`rounded-md px-1.5 py-0.5 text-[9px] sm:text-[10px] font-semibold border ${priorityMeta.bg} ${priorityMeta.color} ${priorityMeta.border}`}>
                                   {priorityMeta.label}
                                 </span>
                               </div>

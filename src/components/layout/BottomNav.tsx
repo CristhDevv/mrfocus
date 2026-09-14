@@ -19,18 +19,20 @@ interface BottomNavProps {
 export function BottomNav({ onOpenQuickCapture }: BottomNavProps) {
   const pathname = usePathname();
 
-  const mainItems = [
+  const leftItems = [
     { label: 'Hoy', href: '/', icon: LayoutDashboard },
     { label: 'Tareas', href: '/tasks', icon: CheckSquare },
+  ];
+
+  const rightItems = [
     { label: 'Calendario', href: '/calendar', icon: Calendar },
     { label: 'Hábitos', href: '/habits', icon: Activity },
-    { label: 'Enfoque', href: '/focus', icon: Timer },
   ];
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden border-t border-slate-200/80 bg-white/95 pb-safe backdrop-blur-lg">
-      <div className="flex h-16 items-center justify-around px-2">
-        {mainItems.slice(0, 2).map((item) => {
+      <div className="flex h-16 items-center justify-around px-3">
+        {leftItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
           return (
@@ -52,8 +54,9 @@ export function BottomNav({ onOpenQuickCapture }: BottomNavProps) {
         })}
 
         {/* Center Quick Add */}
-        <div className="flex items-center justify-center -mt-6">
+        <div className="flex items-center justify-center -mt-5 px-2">
           <button
+            type="button"
             onClick={onOpenQuickCapture}
             className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#18181B] text-white shadow-md active:scale-95 transition-transform"
             aria-label="Crear nueva tarea"
@@ -62,7 +65,7 @@ export function BottomNav({ onOpenQuickCapture }: BottomNavProps) {
           </button>
         </div>
 
-        {mainItems.slice(2).map((item) => {
+        {rightItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
           return (

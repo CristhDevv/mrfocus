@@ -48,7 +48,7 @@ export default function RootLayout({
                 onOpenDailyPlanning={() => setIsDailyPlanningOpen(true)}
               />
 
-              <main className="flex-1 p-4 sm:p-6 lg:p-7 pb-20 lg:pb-7 overflow-y-auto max-w-full">
+              <main className="flex-1 p-3.5 sm:p-6 lg:p-7 pb-28 lg:pb-7 overflow-y-auto max-w-full">
                 {children}
               </main>
             </div>
