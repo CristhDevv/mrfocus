@@ -63,7 +63,7 @@ export async function POST() {
       console.warn('Supabase guest projects error:', err);
     }
 
-    const authUser = { id: userId, email, name };
+    const authUser = { id: userId, email, name, role: 'user' };
     const token = generateToken(authUser);
 
     const response = NextResponse.json({

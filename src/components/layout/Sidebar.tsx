@@ -15,19 +15,23 @@ import {
   Plus,
   Sparkles,
   LogOut,
+  UserPlus,
 } from 'lucide-react';
 
 interface SidebarProps {
   onOpenQuickCapture: () => void;
   onOpenDailyPlanning: () => void;
+  onOpenAdmin?: () => void;
 }
 
 export function Sidebar({
   onOpenQuickCapture,
   onOpenDailyPlanning,
+  onOpenAdmin,
 }: SidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const isSuperadmin = user?.role === 'superadmin';
 
   const navItems = [
     { label: 'Hoy', href: '/', icon: LayoutDashboard },
@@ -41,7 +45,7 @@ export function Sidebar({
 
   return (
     <aside className="hidden lg:flex w-64 flex-col justify-between border-r border-slate-200/80 bg-white p-4 shrink-0">
-      <div className="space-y-5">
+      <div className="space-y-4">
         {/* Quick Add Action Button */}
         <button
           onClick={onOpenQuickCapture}
@@ -50,6 +54,17 @@ export function Sidebar({
           <Plus className="h-4 w-4 stroke-[2.5]" />
           <span>Nueva Tarea</span>
         </button>
+
+        {/* Superadmin Management Button */}
+        {isSuperadmin && onOpenAdmin && (
+          <button
+            onClick={onOpenAdmin}
+            className="flex w-full items-center justify-center space-x-2 rounded-xl bg-amber-500 hover:bg-amber-600 py-2.5 px-4 text-xs font-bold text-white shadow-xs transition-all active:scale-[0.98]"
+          >
+            <UserPlus className="h-4 w-4 stroke-[2.5]" />
+            <span>Crear Usuarios</span>
+          </button>
+        )}
 
         {/* Navigation Links */}
         <nav className="space-y-1">
@@ -91,7 +106,12 @@ export function Sidebar({
         {user && (
           <div className="flex items-center justify-between rounded-xl bg-slate-50 p-2.5 border border-slate-100">
             <div className="min-w-0 flex-1 pr-2">
-              <span className="block text-xs font-bold text-[#18181B] truncate">{user.name}</span>
+              <div className="flex items-center space-x-1.5">
+                <span className="block text-xs font-bold text-[#18181B] truncate">{user.name}</span>
+                {isSuperadmin && (
+                  <span className="text-[9px] font-extrabold text-amber-600 bg-amber-100 px-1.5 py-0.2 rounded">ADMIN</span>
+                )}
+              </div>
               <span className="block text-[10px] text-slate-400 truncate">{user.email}</span>
             </div>
             <button

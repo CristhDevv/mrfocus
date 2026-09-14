@@ -6,6 +6,7 @@ export interface AuthUser {
   id: string;
   email: string;
   name: string;
+  role?: 'superadmin' | 'user' | string;
 }
 
 interface AuthContextType {
@@ -62,6 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               headers.set('x-user-id', parsed.id);
               headers.set('x-user-name', parsed.name || '');
               headers.set('x-user-email', parsed.email || '');
+              headers.set('x-user-role', parsed.role || 'user');
             }
           } catch {}
         }

@@ -1,5 +1,53 @@
 {
-  "projects": [],
+  "users": [
+    {
+      "id": "usr_camilo_superadmin",
+      "email": "camilovelascoofficial@gmail.com",
+      "password_hash": "0ee89bfd28a82c451070deeeec369234e59e335fa39ce67724f9ce6955105cd1e8ddd0342e721582ce3533fa9184fcfccd9b833b85158921991e59260e075e82",
+      "name": "Camilo Velasco",
+      "role": "superadmin",
+      "created_at": "2026-09-14T16:56:48.714Z",
+      "updated_at": "2026-09-14T16:56:48.714Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_trabajo_usr_camilo_superadmin",
+      "user_id": "usr_camilo_superadmin",
+      "name": "Trabajo & Desarrollo",
+      "color": "#3b82f6",
+      "icon": "Briefcase",
+      "description": "Proyectos profesionales y código",
+      "created_at": "2026-09-14T16:56:48.714Z"
+    },
+    {
+      "id": "proj_personal_usr_camilo_superadmin",
+      "user_id": "usr_camilo_superadmin",
+      "name": "Personal & Vida",
+      "color": "#10b981",
+      "icon": "Home",
+      "description": "Gestiones del hogar y bienestar",
+      "created_at": "2026-09-14T16:56:48.714Z"
+    },
+    {
+      "id": "proj_finanzas_usr_camilo_superadmin",
+      "user_id": "usr_camilo_superadmin",
+      "name": "Finanzas",
+      "color": "#f59e0b",
+      "icon": "DollarSign",
+      "description": "Inversiones, pagos y contabilidad",
+      "created_at": "2026-09-14T16:56:48.714Z"
+    },
+    {
+      "id": "proj_estudio_usr_camilo_superadmin",
+      "user_id": "usr_camilo_superadmin",
+      "name": "Aprendizaje",
+      "color": "#8b5cf6",
+      "icon": "BookOpen",
+      "description": "Cursos, lecturas y habilidades",
+      "created_at": "2026-09-14T16:56:48.714Z"
+    }
+  ],
   "tasks": [],
   "subtasks": [],
   "calendar_events": [],

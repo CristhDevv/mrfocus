@@ -11,11 +11,13 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { QuickCaptureModal } from '@/components/quick-capture/QuickCaptureModal';
 import { DailyPlanningModal } from '@/components/daily-planning/DailyPlanningModal';
+import { AdminUserModal } from '@/components/admin/AdminUserModal';
 
 function AppContent({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [isDailyPlanningOpen, setIsDailyPlanningOpen] = useState(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -38,6 +40,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
       <Header
         onOpenQuickCapture={() => setIsQuickCaptureOpen(true)}
         onOpenDailyPlanning={() => setIsDailyPlanningOpen(true)}
+        onOpenAdmin={() => setIsAdminModalOpen(true)}
       />
 
       {/* Layout Body: Sidebar + Main Content */}
@@ -45,6 +48,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
         <Sidebar
           onOpenQuickCapture={() => setIsQuickCaptureOpen(true)}
           onOpenDailyPlanning={() => setIsDailyPlanningOpen(true)}
+          onOpenAdmin={() => setIsAdminModalOpen(true)}
         />
 
         <main className="flex-1 p-3.5 sm:p-6 lg:p-7 pb-28 lg:pb-7 overflow-y-auto max-w-full">
@@ -75,6 +79,13 @@ function AppContent({ children }: { children: React.ReactNode }) {
           }
         }}
       />
+
+      {user?.role === 'superadmin' && (
+        <AdminUserModal
+          isOpen={isAdminModalOpen}
+          onClose={() => setIsAdminModalOpen(false)}
+        />
+      )}
     </>
   );
 }

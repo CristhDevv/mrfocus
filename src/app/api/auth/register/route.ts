@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
       console.warn('Supabase default projects error:', err);
     }
 
-    const authUser = { id: userId, email: cleanEmail, name: cleanName };
+    const authUser = { id: userId, email: cleanEmail, name: cleanName, role: 'user' };
     const token = generateToken(authUser);
 
     const response = NextResponse.json({

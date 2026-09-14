@@ -12,7 +12,7 @@ describe('Auth Utilities', () => {
   });
 
   it('should generate and verify JWT token payload', () => {
-    const user = { id: 'usr_test_1', email: 'test@example.com', name: 'Test User' };
+    const user = { id: 'usr_test_1', email: 'test@example.com', name: 'Test User', role: 'superadmin' as const };
     const token = generateToken(user);
     expect(token).toBeDefined();
     expect(token).toContain('.');
@@ -22,6 +22,7 @@ describe('Auth Utilities', () => {
     expect(verified?.id).toBe(user.id);
     expect(verified?.email).toBe(user.email);
     expect(verified?.name).toBe(user.name);
+    expect(verified?.role).toBe('superadmin');
   });
 
   it('should reject invalid or tampered token', () => {
@@ -29,3 +30,4 @@ describe('Auth Utilities', () => {
     expect(verifyToken(invalidToken)).toBeNull();
   });
 });
+

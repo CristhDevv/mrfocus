@@ -7,6 +7,7 @@ export interface AuthUser {
   id: string;
   email: string;
   name: string;
+  role?: 'superadmin' | 'user' | string;
 }
 
 export function hashPassword(password: string): string {
@@ -23,6 +24,7 @@ export function generateToken(user: AuthUser): string {
     id: user.id,
     email: user.email,
     name: user.name,
+    role: user.role || 'user',
     exp: Date.now() + 1000 * 60 * 60 * 24 * 30, // 30 days
   };
   const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
@@ -51,6 +53,7 @@ export function verifyToken(token: string): AuthUser | null {
       id: payload.id,
       email: payload.email,
       name: payload.name,
+      role: payload.role || 'user',
     };
   } catch {
     return null;
@@ -70,11 +73,13 @@ export function getAuthUser(req: NextRequest): AuthUser | null {
   const userIdHeader = req.headers.get('x-user-id');
   const userNameHeader = req.headers.get('x-user-name') || 'Usuario';
   const userEmailHeader = req.headers.get('x-user-email') || 'usuario@mrfocus.app';
+  const userRoleHeader = req.headers.get('x-user-role') || 'user';
   if (userIdHeader && userIdHeader.trim()) {
     return {
       id: userIdHeader.trim(),
       email: userEmailHeader,
       name: userNameHeader,
+      role: userRoleHeader,
     };
   }
 
