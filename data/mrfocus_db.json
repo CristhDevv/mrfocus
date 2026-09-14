@@ -1,0 +1,2046 @@
+{
+  "projects": [
+    {
+      "id": "proj_trabajo",
+      "name": "Trabajo & Desarrollo",
+      "color": "#3b82f6",
+      "icon": "Briefcase",
+      "description": "Proyectos profesionales y código",
+      "created_at": "2026-09-14T15:18:51.511Z"
+    },
+    {
+      "id": "proj_personal",
+      "name": "Personal & Vida",
+      "color": "#10b981",
+      "icon": "Home",
+      "description": "Gestiones del hogar y bienestar",
+      "created_at": "2026-09-14T15:18:51.512Z"
+    },
+    {
+      "id": "proj_finanzas",
+      "name": "Finanzas",
+      "color": "#f59e0b",
+      "icon": "DollarSign",
+      "description": "Inversiones, pagos y contabilidad",
+      "created_at": "2026-09-14T15:18:51.513Z"
+    },
+    {
+      "id": "proj_estudio",
+      "name": "Aprendizaje",
+      "color": "#8b5cf6",
+      "icon": "BookOpen",
+      "description": "Cursos, lecturas y habilidades",
+      "created_at": "2026-09-14T15:18:51.513Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task_1",
+      "title": "Preparar presentación para el Sprint Review",
+      "description": "Compilar métricas de velocidad, demos de las nuevas funcionalidades y feedback",
+      "project_id": "proj_trabajo",
+      "priority": 1,
+      "status": "in_progress",
+      "due_date": "2026-09-14",
+      "due_time": "16:00",
+      "estimated_minutes": 60,
+      "actual_minutes": 30,
+      "tags": "[\"sprint\",\"demo\",\"urgente\"]",
+      "recurrence_rule": null,
+      "scheduled_start": "2026-09-14T10:00:00",
+      "scheduled_end": "2026-09-14T11:00:00",
+      "notes": null,
+      "created_at": "2026-09-14T15:18:51.514Z",
+      "completed_at": null,
+      "order_index": 0
+    },
+    {
+      "id": "task_2",
+      "title": "Pagar renta y servicios mensuales",
+      "description": "Transferencia bancaria de alquiler y recibo de luz",
+      "project_id": "proj_finanzas",
+      "priority": 1,
+      "status": "todo",
+      "due_date": "2026-09-14",
+      "due_time": "12:00",
+      "estimated_minutes": 20,
+      "actual_minutes": 0,
+      "tags": "[\"finanzas\",\"pagos\"]",
+      "recurrence_rule": "monthly:1",
+      "scheduled_start": "2026-09-14T11:15:00",
+      "scheduled_end": "2026-09-14T11:35:00",
+      "notes": null,
+      "created_at": "2026-09-14T15:18:51.515Z",
+      "completed_at": null,
+      "order_index": 1
+    },
+    {
+      "id": "task_3",
+      "title": "Refactorizar módulo de autenticación con OAuth",
+      "description": "Migrar endpoints legacy y añadir rate limiting",
+      "project_id": "proj_trabajo",
+      "priority": 2,
+      "status": "todo",
+      "due_date": "2026-09-15",
+      "due_time": null,
+      "estimated_minutes": 90,
+      "actual_minutes": 0,
+      "tags": "[\"backend\",\"seguridad\"]",
+      "recurrence_rule": null,
+      "scheduled_start": null,
+      "scheduled_end": null,
+      "notes": null,
+      "created_at": "2026-09-14T15:18:51.517Z",
+      "completed_at": null,
+      "order_index": 2
+    },
+    {
+      "id": "task_4",
+      "title": "Leer 20 páginas de \"Hábitos Atómicos\"",
+      "description": "Capítulo sobre diseño de entorno e incentivos",
+      "project_id": "proj_estudio",
+      "priority": 3,
+      "status": "done",
+      "due_date": "2026-09-14",
+      "due_time": null,
+      "estimated_minutes": 30,
+      "actual_minutes": 30,
+      "tags": "[\"lectura\",\"mindset\"]",
+      "recurrence_rule": "daily",
+      "scheduled_start": null,
+      "scheduled_end": null,
+      "notes": null,
+      "created_at": "2026-09-14T15:18:51.518Z",
+      "completed_at": "2026-09-14T15:18:51.514Z",
+      "order_index": 3
+    },
+    {
+      "id": "task_5",
+      "title": "Comprar alimentos frescos para la semana",
+      "description": "Frutas, verduras, pollo y avena",
+      "project_id": "proj_personal",
+      "priority": 3,
+      "status": "todo",
+      "due_date": "2026-09-16",
+      "due_time": null,
+      "estimated_minutes": 45,
+      "actual_minutes": 0,
+      "tags": "[\"compras\",\"hogar\"]",
+      "recurrence_rule": null,
+      "scheduled_start": null,
+      "scheduled_end": null,
+      "notes": null,
+      "created_at": "2026-09-14T15:18:51.519Z",
+      "completed_at": null,
+      "order_index": 4
+    },
+    {
+      "id": "task_6",
+      "title": "Configurar backups automáticos de la base de datos",
+      "description": "Script de respaldo en S3 cada medianoche",
+      "project_id": "proj_trabajo",
+      "priority": 2,
+      "status": "review",
+      "due_date": "2026-09-14",
+      "due_time": null,
+      "estimated_minutes": 45,
+      "actual_minutes": 45,
+      "tags": "[\"devops\",\"infra\"]",
+      "recurrence_rule": null,
+      "scheduled_start": "2026-09-14T14:30:00",
+      "scheduled_end": "2026-09-14T15:15:00",
+      "notes": null,
+      "created_at": "2026-09-14T15:18:51.520Z",
+      "completed_at": null,
+      "order_index": 5
+    }
+  ],
+  "subtasks": [
+    {
+      "id": "st_task_1_0",
+      "task_id": "task_1",
+      "title": "Extraer capturas de pantalla de la UI",
+      "completed": 1,
+      "order_index": 0
+    },
+    {
+      "id": "st_task_1_1",
+      "task_id": "task_1",
+      "title": "Generar diapositivas de resumen",
+      "completed": 1,
+      "order_index": 1
+    },
+    {
+      "id": "st_task_1_2",
+      "task_id": "task_1",
+      "title": "Validar métricas con el Lead",
+      "completed": 0,
+      "order_index": 2
+    },
+    {
+      "id": "st_task_2_0",
+      "task_id": "task_2",
+      "title": "Descargar comprobante bancario",
+      "completed": 0,
+      "order_index": 0
+    },
+    {
+      "id": "st_task_2_1",
+      "task_id": "task_2",
+      "title": "Enviar recibo por correo al propietario",
+      "completed": 0,
+      "order_index": 1
+    },
+    {
+      "id": "st_task_3_0",
+      "task_id": "task_3",
+      "title": "Revisar tokens JWT",
+      "completed": 0,
+      "order_index": 0
+    },
+    {
+      "id": "st_task_3_1",
+      "task_id": "task_3",
+      "title": "Escribir tests unitarios",
+      "completed": 0,
+      "order_index": 1
+    },
+    {
+      "id": "st_task_5_0",
+      "task_id": "task_5",
+      "title": "Verificar inventario de la alacena",
+      "completed": 1,
+      "order_index": 0
+    },
+    {
+      "id": "st_task_5_1",
+      "task_id": "task_5",
+      "title": "Ir al mercado local",
+      "completed": 0,
+      "order_index": 1
+    }
+  ],
+  "calendar_events": [
+    {
+      "id": "ev_1",
+      "title": "Daily Standup con el equipo",
+      "description": "Sincronización diaria de 15 minutos en Google Meet",
+      "start_time": "2026-09-14T09:00:00",
+      "end_time": "2026-09-14T09:30:00",
+      "is_all_day": 0,
+      "color": "#3b82f6",
+      "location": "Google Meet",
+      "project_id": "proj_trabajo"
+    },
+    {
+      "id": "ev_2",
+      "title": "Almuerzo y caminata al aire libre",
+      "description": "Descanso libre de pantallas",
+      "start_time": "2026-09-14T13:00:00",
+      "end_time": "2026-09-14T14:00:00",
+      "is_all_day": 0,
+      "color": "#10b981",
+      "location": "Parque",
+      "project_id": "proj_personal"
+    },
+    {
+      "id": "ev_3",
+      "title": "Reunión de planificación de producto",
+      "description": "Definición de roadmap del Q4 con stakeholders",
+      "start_time": "2026-09-14T16:00:00",
+      "end_time": "2026-09-14T17:00:00",
+      "is_all_day": 0,
+      "color": "#8b5cf6",
+      "location": "Sala Zoom A",
+      "project_id": "proj_trabajo"
+    },
+    {
+      "id": "ev_4",
+      "title": "Sesión 1:1 con mentor de carrera",
+      "description": "Revisión de metas trimestrales",
+      "start_time": "2026-09-15T11:00:00",
+      "end_time": "2026-09-15T12:00:00",
+      "is_all_day": 0,
+      "color": "#f59e0b",
+      "location": "Meet",
+      "project_id": "proj_estudio"
+    }
+  ],
+  "habits": [
+    {
+      "id": "hab_1",
+      "name": "Meditar 10 minutos",
+      "icon": "Smile",
+      "category": "Salud Mental",
+      "frequency": "daily",
+      "target_days_per_week": 7,
+      "streak": 14,
+      "best_streak": 21,
+      "created_at": "2026-09-14T15:18:51.522Z"
+    },
+    {
+      "id": "hab_2",
+      "name": "Entrenamiento / Gimnasio",
+      "icon": "Dumbbell",
+      "category": "Fitness",
+      "frequency": "daily",
+      "target_days_per_week": 7,
+      "streak": 5,
+      "best_streak": 12,
+      "created_at": "2026-09-14T15:18:51.551Z"
+    },
+    {
+      "id": "hab_3",
+      "name": "Planificación Matutina",
+      "icon": "Sun",
+      "category": "Productividad",
+      "frequency": "daily",
+      "target_days_per_week": 7,
+      "streak": 9,
+      "best_streak": 18,
+      "created_at": "2026-09-14T15:18:51.584Z"
+    },
+    {
+      "id": "hab_4",
+      "name": "Tomar 2L de Agua",
+      "icon": "Droplet",
+      "category": "Salud",
+      "frequency": "daily",
+      "target_days_per_week": 7,
+      "streak": 12,
+      "best_streak": 30,
+      "created_at": "2026-09-14T15:18:51.618Z"
+    },
+    {
+      "id": "hab_5",
+      "name": "Cero pantallas antes de dormir",
+      "icon": "Moon",
+      "category": "Sueño",
+      "frequency": "daily",
+      "target_days_per_week": 7,
+      "streak": 4,
+      "best_streak": 8,
+      "created_at": "2026-09-14T15:18:51.664Z"
+    }
+  ],
+  "habit_logs": [
+    {
+      "id": "hl_hab_1_2026-09-14",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-14",
+      "created_at": "2026-09-14T15:18:51.523Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-13",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-13",
+      "created_at": "2026-09-14T15:18:51.523Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-12",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-12",
+      "created_at": "2026-09-14T15:18:51.524Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-11",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-11",
+      "created_at": "2026-09-14T15:18:51.524Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-10",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-10",
+      "created_at": "2026-09-14T15:18:51.525Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-09",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-09",
+      "created_at": "2026-09-14T15:18:51.525Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-08",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-08",
+      "created_at": "2026-09-14T15:18:51.526Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-07",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-07",
+      "created_at": "2026-09-14T15:18:51.526Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-06",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-06",
+      "created_at": "2026-09-14T15:18:51.527Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-05",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-05",
+      "created_at": "2026-09-14T15:18:51.528Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-04",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-04",
+      "created_at": "2026-09-14T15:18:51.528Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-03",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-03",
+      "created_at": "2026-09-14T15:18:51.529Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-02",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-02",
+      "created_at": "2026-09-14T15:18:51.530Z"
+    },
+    {
+      "id": "hl_hab_1_2026-09-01",
+      "habit_id": "hab_1",
+      "completed_date": "2026-09-01",
+      "created_at": "2026-09-14T15:18:51.530Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-31",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-31",
+      "created_at": "2026-09-14T15:18:51.531Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-30",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-30",
+      "created_at": "2026-09-14T15:18:51.532Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-27",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-27",
+      "created_at": "2026-09-14T15:18:51.532Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-26",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-26",
+      "created_at": "2026-09-14T15:18:51.533Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-25",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-25",
+      "created_at": "2026-09-14T15:18:51.533Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-23",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-23",
+      "created_at": "2026-09-14T15:18:51.535Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-22",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-22",
+      "created_at": "2026-09-14T15:18:51.535Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-18",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-18",
+      "created_at": "2026-09-14T15:18:51.536Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-16",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-16",
+      "created_at": "2026-09-14T15:18:51.536Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-15",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-15",
+      "created_at": "2026-09-14T15:18:51.537Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-14",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-14",
+      "created_at": "2026-09-14T15:18:51.537Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-13",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-13",
+      "created_at": "2026-09-14T15:18:51.538Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-12",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-12",
+      "created_at": "2026-09-14T15:18:51.538Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-11",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-11",
+      "created_at": "2026-09-14T15:18:51.539Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-10",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-10",
+      "created_at": "2026-09-14T15:18:51.539Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-09",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-09",
+      "created_at": "2026-09-14T15:18:51.540Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-08",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-08",
+      "created_at": "2026-09-14T15:18:51.540Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-07",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-07",
+      "created_at": "2026-09-14T15:18:51.541Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-06",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-06",
+      "created_at": "2026-09-14T15:18:51.542Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-04",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-04",
+      "created_at": "2026-09-14T15:18:51.542Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-03",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-03",
+      "created_at": "2026-09-14T15:18:51.543Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-02",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-02",
+      "created_at": "2026-09-14T15:18:51.543Z"
+    },
+    {
+      "id": "hl_hab_1_2026-08-01",
+      "habit_id": "hab_1",
+      "completed_date": "2026-08-01",
+      "created_at": "2026-09-14T15:18:51.544Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-31",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-31",
+      "created_at": "2026-09-14T15:18:51.544Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-29",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-29",
+      "created_at": "2026-09-14T15:18:51.545Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-28",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-28",
+      "created_at": "2026-09-14T15:18:51.546Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-26",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-26",
+      "created_at": "2026-09-14T15:18:51.546Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-24",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-24",
+      "created_at": "2026-09-14T15:18:51.547Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-22",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-22",
+      "created_at": "2026-09-14T15:18:51.547Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-21",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-21",
+      "created_at": "2026-09-14T15:18:51.548Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-19",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-19",
+      "created_at": "2026-09-14T15:18:51.549Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-18",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-18",
+      "created_at": "2026-09-14T15:18:51.549Z"
+    },
+    {
+      "id": "hl_hab_1_2026-07-17",
+      "habit_id": "hab_1",
+      "completed_date": "2026-07-17",
+      "created_at": "2026-09-14T15:18:51.550Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-14",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-14",
+      "created_at": "2026-09-14T15:18:51.551Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-13",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-13",
+      "created_at": "2026-09-14T15:18:51.552Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-12",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-12",
+      "created_at": "2026-09-14T15:18:51.552Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-11",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-11",
+      "created_at": "2026-09-14T15:18:51.553Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-10",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-10",
+      "created_at": "2026-09-14T15:18:51.553Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-09",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-09",
+      "created_at": "2026-09-14T15:18:51.554Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-08",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-08",
+      "created_at": "2026-09-14T15:18:51.555Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-07",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-07",
+      "created_at": "2026-09-14T15:18:51.555Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-05",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-05",
+      "created_at": "2026-09-14T15:18:51.556Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-04",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-04",
+      "created_at": "2026-09-14T15:18:51.556Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-03",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-03",
+      "created_at": "2026-09-14T15:18:51.557Z"
+    },
+    {
+      "id": "hl_hab_2_2026-09-01",
+      "habit_id": "hab_2",
+      "completed_date": "2026-09-01",
+      "created_at": "2026-09-14T15:18:51.558Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-31",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-31",
+      "created_at": "2026-09-14T15:18:51.558Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-30",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-30",
+      "created_at": "2026-09-14T15:18:51.559Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-29",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-29",
+      "created_at": "2026-09-14T15:18:51.559Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-28",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-28",
+      "created_at": "2026-09-14T15:18:51.560Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-27",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-27",
+      "created_at": "2026-09-14T15:18:51.561Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-22",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-22",
+      "created_at": "2026-09-14T15:18:51.562Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-21",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-21",
+      "created_at": "2026-09-14T15:18:51.563Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-20",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-20",
+      "created_at": "2026-09-14T15:18:51.564Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-19",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-19",
+      "created_at": "2026-09-14T15:18:51.564Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-18",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-18",
+      "created_at": "2026-09-14T15:18:51.565Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-17",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-17",
+      "created_at": "2026-09-14T15:18:51.566Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-16",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-16",
+      "created_at": "2026-09-14T15:18:51.566Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-14",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-14",
+      "created_at": "2026-09-14T15:18:51.567Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-13",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-13",
+      "created_at": "2026-09-14T15:18:51.568Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-12",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-12",
+      "created_at": "2026-09-14T15:18:51.568Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-10",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-10",
+      "created_at": "2026-09-14T15:18:51.569Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-09",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-09",
+      "created_at": "2026-09-14T15:18:51.570Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-07",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-07",
+      "created_at": "2026-09-14T15:18:51.570Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-06",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-06",
+      "created_at": "2026-09-14T15:18:51.571Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-05",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-05",
+      "created_at": "2026-09-14T15:18:51.572Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-04",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-04",
+      "created_at": "2026-09-14T15:18:51.572Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-03",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-03",
+      "created_at": "2026-09-14T15:18:51.573Z"
+    },
+    {
+      "id": "hl_hab_2_2026-08-01",
+      "habit_id": "hab_2",
+      "completed_date": "2026-08-01",
+      "created_at": "2026-09-14T15:18:51.574Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-31",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-31",
+      "created_at": "2026-09-14T15:18:51.575Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-30",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-30",
+      "created_at": "2026-09-14T15:18:51.575Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-29",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-29",
+      "created_at": "2026-09-14T15:18:51.576Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-28",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-28",
+      "created_at": "2026-09-14T15:18:51.577Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-27",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-27",
+      "created_at": "2026-09-14T15:18:51.578Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-26",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-26",
+      "created_at": "2026-09-14T15:18:51.579Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-25",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-25",
+      "created_at": "2026-09-14T15:18:51.580Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-24",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-24",
+      "created_at": "2026-09-14T15:18:51.580Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-23",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-23",
+      "created_at": "2026-09-14T15:18:51.581Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-22",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-22",
+      "created_at": "2026-09-14T15:18:51.581Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-21",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-21",
+      "created_at": "2026-09-14T15:18:51.582Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-18",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-18",
+      "created_at": "2026-09-14T15:18:51.583Z"
+    },
+    {
+      "id": "hl_hab_2_2026-07-17",
+      "habit_id": "hab_2",
+      "completed_date": "2026-07-17",
+      "created_at": "2026-09-14T15:18:51.583Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-14",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-14",
+      "created_at": "2026-09-14T15:18:51.585Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-13",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-13",
+      "created_at": "2026-09-14T15:18:51.585Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-12",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-12",
+      "created_at": "2026-09-14T15:18:51.586Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-11",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-11",
+      "created_at": "2026-09-14T15:18:51.587Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-10",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-10",
+      "created_at": "2026-09-14T15:18:51.587Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-09",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-09",
+      "created_at": "2026-09-14T15:18:51.588Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-08",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-08",
+      "created_at": "2026-09-14T15:18:51.589Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-07",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-07",
+      "created_at": "2026-09-14T15:18:51.589Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-06",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-06",
+      "created_at": "2026-09-14T15:18:51.590Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-05",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-05",
+      "created_at": "2026-09-14T15:18:51.591Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-04",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-04",
+      "created_at": "2026-09-14T15:18:51.591Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-02",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-02",
+      "created_at": "2026-09-14T15:18:51.592Z"
+    },
+    {
+      "id": "hl_hab_3_2026-09-01",
+      "habit_id": "hab_3",
+      "completed_date": "2026-09-01",
+      "created_at": "2026-09-14T15:18:51.593Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-31",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-31",
+      "created_at": "2026-09-14T15:18:51.593Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-30",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-30",
+      "created_at": "2026-09-14T15:18:51.595Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-29",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-29",
+      "created_at": "2026-09-14T15:18:51.596Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-28",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-28",
+      "created_at": "2026-09-14T15:18:51.597Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-27",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-27",
+      "created_at": "2026-09-14T15:18:51.598Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-26",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-26",
+      "created_at": "2026-09-14T15:18:51.599Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-24",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-24",
+      "created_at": "2026-09-14T15:18:51.599Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-23",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-23",
+      "created_at": "2026-09-14T15:18:51.600Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-21",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-21",
+      "created_at": "2026-09-14T15:18:51.601Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-20",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-20",
+      "created_at": "2026-09-14T15:18:51.601Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-19",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-19",
+      "created_at": "2026-09-14T15:18:51.602Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-18",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-18",
+      "created_at": "2026-09-14T15:18:51.603Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-17",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-17",
+      "created_at": "2026-09-14T15:18:51.603Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-15",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-15",
+      "created_at": "2026-09-14T15:18:51.604Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-13",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-13",
+      "created_at": "2026-09-14T15:18:51.605Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-12",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-12",
+      "created_at": "2026-09-14T15:18:51.605Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-11",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-11",
+      "created_at": "2026-09-14T15:18:51.606Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-09",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-09",
+      "created_at": "2026-09-14T15:18:51.607Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-06",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-06",
+      "created_at": "2026-09-14T15:18:51.608Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-05",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-05",
+      "created_at": "2026-09-14T15:18:51.608Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-04",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-04",
+      "created_at": "2026-09-14T15:18:51.609Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-03",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-03",
+      "created_at": "2026-09-14T15:18:51.610Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-02",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-02",
+      "created_at": "2026-09-14T15:18:51.611Z"
+    },
+    {
+      "id": "hl_hab_3_2026-08-01",
+      "habit_id": "hab_3",
+      "completed_date": "2026-08-01",
+      "created_at": "2026-09-14T15:18:51.611Z"
+    },
+    {
+      "id": "hl_hab_3_2026-07-30",
+      "habit_id": "hab_3",
+      "completed_date": "2026-07-30",
+      "created_at": "2026-09-14T15:18:51.612Z"
+    },
+    {
+      "id": "hl_hab_3_2026-07-29",
+      "habit_id": "hab_3",
+      "completed_date": "2026-07-29",
+      "created_at": "2026-09-14T15:18:51.613Z"
+    },
+    {
+      "id": "hl_hab_3_2026-07-26",
+      "habit_id": "hab_3",
+      "completed_date": "2026-07-26",
+      "created_at": "2026-09-14T15:18:51.613Z"
+    },
+    {
+      "id": "hl_hab_3_2026-07-24",
+      "habit_id": "hab_3",
+      "completed_date": "2026-07-24",
+      "created_at": "2026-09-14T15:18:51.614Z"
+    },
+    {
+      "id": "hl_hab_3_2026-07-21",
+      "habit_id": "hab_3",
+      "completed_date": "2026-07-21",
+      "created_at": "2026-09-14T15:18:51.615Z"
+    },
+    {
+      "id": "hl_hab_3_2026-07-20",
+      "habit_id": "hab_3",
+      "completed_date": "2026-07-20",
+      "created_at": "2026-09-14T15:18:51.615Z"
+    },
+    {
+      "id": "hl_hab_3_2026-07-19",
+      "habit_id": "hab_3",
+      "completed_date": "2026-07-19",
+      "created_at": "2026-09-14T15:18:51.617Z"
+    },
+    {
+      "id": "hl_hab_3_2026-07-17",
+      "habit_id": "hab_3",
+      "completed_date": "2026-07-17",
+      "created_at": "2026-09-14T15:18:51.617Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-14",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-14",
+      "created_at": "2026-09-14T15:18:51.619Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-13",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-13",
+      "created_at": "2026-09-14T15:18:51.619Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-12",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-12",
+      "created_at": "2026-09-14T15:18:51.620Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-11",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-11",
+      "created_at": "2026-09-14T15:18:51.621Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-10",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-10",
+      "created_at": "2026-09-14T15:18:51.621Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-09",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-09",
+      "created_at": "2026-09-14T15:18:51.622Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-08",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-08",
+      "created_at": "2026-09-14T15:18:51.623Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-07",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-07",
+      "created_at": "2026-09-14T15:18:51.623Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-06",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-06",
+      "created_at": "2026-09-14T15:18:51.624Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-05",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-05",
+      "created_at": "2026-09-14T15:18:51.625Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-04",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-04",
+      "created_at": "2026-09-14T15:18:51.626Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-03",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-03",
+      "created_at": "2026-09-14T15:18:51.627Z"
+    },
+    {
+      "id": "hl_hab_4_2026-09-01",
+      "habit_id": "hab_4",
+      "completed_date": "2026-09-01",
+      "created_at": "2026-09-14T15:18:51.636Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-31",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-31",
+      "created_at": "2026-09-14T15:18:51.637Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-30",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-30",
+      "created_at": "2026-09-14T15:18:51.638Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-29",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-29",
+      "created_at": "2026-09-14T15:18:51.638Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-28",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-28",
+      "created_at": "2026-09-14T15:18:51.639Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-27",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-27",
+      "created_at": "2026-09-14T15:18:51.640Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-26",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-26",
+      "created_at": "2026-09-14T15:18:51.641Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-25",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-25",
+      "created_at": "2026-09-14T15:18:51.641Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-24",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-24",
+      "created_at": "2026-09-14T15:18:51.642Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-22",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-22",
+      "created_at": "2026-09-14T15:18:51.643Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-21",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-21",
+      "created_at": "2026-09-14T15:18:51.644Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-20",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-20",
+      "created_at": "2026-09-14T15:18:51.645Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-19",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-19",
+      "created_at": "2026-09-14T15:18:51.646Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-17",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-17",
+      "created_at": "2026-09-14T15:18:51.646Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-15",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-15",
+      "created_at": "2026-09-14T15:18:51.647Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-14",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-14",
+      "created_at": "2026-09-14T15:18:51.648Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-12",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-12",
+      "created_at": "2026-09-14T15:18:51.649Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-11",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-11",
+      "created_at": "2026-09-14T15:18:51.649Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-10",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-10",
+      "created_at": "2026-09-14T15:18:51.650Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-08",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-08",
+      "created_at": "2026-09-14T15:18:51.651Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-07",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-07",
+      "created_at": "2026-09-14T15:18:51.652Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-06",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-06",
+      "created_at": "2026-09-14T15:18:51.652Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-05",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-05",
+      "created_at": "2026-09-14T15:18:51.653Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-04",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-04",
+      "created_at": "2026-09-14T15:18:51.654Z"
+    },
+    {
+      "id": "hl_hab_4_2026-08-01",
+      "habit_id": "hab_4",
+      "completed_date": "2026-08-01",
+      "created_at": "2026-09-14T15:18:51.654Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-31",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-31",
+      "created_at": "2026-09-14T15:18:51.655Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-30",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-30",
+      "created_at": "2026-09-14T15:18:51.656Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-29",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-29",
+      "created_at": "2026-09-14T15:18:51.657Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-28",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-28",
+      "created_at": "2026-09-14T15:18:51.658Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-27",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-27",
+      "created_at": "2026-09-14T15:18:51.658Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-26",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-26",
+      "created_at": "2026-09-14T15:18:51.659Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-25",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-25",
+      "created_at": "2026-09-14T15:18:51.660Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-24",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-24",
+      "created_at": "2026-09-14T15:18:51.661Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-20",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-20",
+      "created_at": "2026-09-14T15:18:51.662Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-19",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-19",
+      "created_at": "2026-09-14T15:18:51.662Z"
+    },
+    {
+      "id": "hl_hab_4_2026-07-17",
+      "habit_id": "hab_4",
+      "completed_date": "2026-07-17",
+      "created_at": "2026-09-14T15:18:51.663Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-14",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-14",
+      "created_at": "2026-09-14T15:18:51.665Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-13",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-13",
+      "created_at": "2026-09-14T15:18:51.666Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-12",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-12",
+      "created_at": "2026-09-14T15:18:51.667Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-11",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-11",
+      "created_at": "2026-09-14T15:18:51.668Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-10",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-10",
+      "created_at": "2026-09-14T15:18:51.669Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-09",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-09",
+      "created_at": "2026-09-14T15:18:51.670Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-07",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-07",
+      "created_at": "2026-09-14T15:18:51.670Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-06",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-06",
+      "created_at": "2026-09-14T15:18:51.671Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-05",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-05",
+      "created_at": "2026-09-14T15:18:51.672Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-03",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-03",
+      "created_at": "2026-09-14T15:18:51.673Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-02",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-02",
+      "created_at": "2026-09-14T15:18:51.674Z"
+    },
+    {
+      "id": "hl_hab_5_2026-09-01",
+      "habit_id": "hab_5",
+      "completed_date": "2026-09-01",
+      "created_at": "2026-09-14T15:18:51.675Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-31",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-31",
+      "created_at": "2026-09-14T15:18:51.675Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-30",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-30",
+      "created_at": "2026-09-14T15:18:51.676Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-29",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-29",
+      "created_at": "2026-09-14T15:18:51.677Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-28",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-28",
+      "created_at": "2026-09-14T15:18:51.678Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-27",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-27",
+      "created_at": "2026-09-14T15:18:51.678Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-26",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-26",
+      "created_at": "2026-09-14T15:18:51.679Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-25",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-25",
+      "created_at": "2026-09-14T15:18:51.680Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-24",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-24",
+      "created_at": "2026-09-14T15:18:51.681Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-23",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-23",
+      "created_at": "2026-09-14T15:18:51.681Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-22",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-22",
+      "created_at": "2026-09-14T15:18:51.683Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-21",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-21",
+      "created_at": "2026-09-14T15:18:51.683Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-20",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-20",
+      "created_at": "2026-09-14T15:18:51.684Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-19",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-19",
+      "created_at": "2026-09-14T15:18:51.685Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-18",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-18",
+      "created_at": "2026-09-14T15:18:51.685Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-15",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-15",
+      "created_at": "2026-09-14T15:18:51.686Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-14",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-14",
+      "created_at": "2026-09-14T15:18:51.687Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-13",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-13",
+      "created_at": "2026-09-14T15:18:51.688Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-12",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-12",
+      "created_at": "2026-09-14T15:18:51.688Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-10",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-10",
+      "created_at": "2026-09-14T15:18:51.689Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-09",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-09",
+      "created_at": "2026-09-14T15:18:51.690Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-08",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-08",
+      "created_at": "2026-09-14T15:18:51.691Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-07",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-07",
+      "created_at": "2026-09-14T15:18:51.692Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-06",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-06",
+      "created_at": "2026-09-14T15:18:51.693Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-05",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-05",
+      "created_at": "2026-09-14T15:18:51.693Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-04",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-04",
+      "created_at": "2026-09-14T15:18:51.694Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-02",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-02",
+      "created_at": "2026-09-14T15:18:51.696Z"
+    },
+    {
+      "id": "hl_hab_5_2026-08-01",
+      "habit_id": "hab_5",
+      "completed_date": "2026-08-01",
+      "created_at": "2026-09-14T15:18:51.697Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-31",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-31",
+      "created_at": "2026-09-14T15:18:51.698Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-30",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-30",
+      "created_at": "2026-09-14T15:18:51.699Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-29",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-29",
+      "created_at": "2026-09-14T15:18:51.700Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-25",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-25",
+      "created_at": "2026-09-14T15:18:51.701Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-24",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-24",
+      "created_at": "2026-09-14T15:18:51.702Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-22",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-22",
+      "created_at": "2026-09-14T15:18:51.703Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-21",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-21",
+      "created_at": "2026-09-14T15:18:51.703Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-20",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-20",
+      "created_at": "2026-09-14T15:18:51.704Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-19",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-19",
+      "created_at": "2026-09-14T15:18:51.705Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-18",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-18",
+      "created_at": "2026-09-14T15:18:51.706Z"
+    },
+    {
+      "id": "hl_hab_5_2026-07-17",
+      "habit_id": "hab_5",
+      "completed_date": "2026-07-17",
+      "created_at": "2026-09-14T15:18:51.707Z"
+    }
+  ],
+  "time_sessions": [
+    {
+      "id": "ts_seed_0_1",
+      "task_id": "task_1",
+      "project_id": "proj_trabajo",
+      "type": "pomodoro",
+      "start_time": "2026-09-14T10:00:00",
+      "end_time": "2026-09-14T10:50:00",
+      "duration_minutes": 50,
+      "notes": "Enfoque en Sprint Review",
+      "created_at": "2026-09-14T15:18:51.708Z"
+    },
+    {
+      "id": "ts_seed_0_2",
+      "task_id": "task_4",
+      "project_id": "proj_estudio",
+      "type": "stopwatch",
+      "start_time": "2026-09-14T15:00:00",
+      "end_time": "2026-09-14T15:35:00",
+      "duration_minutes": 35,
+      "notes": "Lectura de Hábitos Atómicos",
+      "created_at": "2026-09-14T15:18:51.708Z"
+    },
+    {
+      "id": "ts_seed_1_1",
+      "task_id": "task_1",
+      "project_id": "proj_trabajo",
+      "type": "pomodoro",
+      "start_time": "2026-09-13T10:00:00",
+      "end_time": "2026-09-13T10:50:00",
+      "duration_minutes": 50,
+      "notes": "Enfoque en Sprint Review",
+      "created_at": "2026-09-14T15:18:51.709Z"
+    },
+    {
+      "id": "ts_seed_1_2",
+      "task_id": "task_4",
+      "project_id": "proj_estudio",
+      "type": "stopwatch",
+      "start_time": "2026-09-13T15:00:00",
+      "end_time": "2026-09-13T15:35:00",
+      "duration_minutes": 35,
+      "notes": "Lectura de Hábitos Atómicos",
+      "created_at": "2026-09-14T15:18:51.710Z"
+    },
+    {
+      "id": "ts_seed_2_1",
+      "task_id": "task_1",
+      "project_id": "proj_trabajo",
+      "type": "pomodoro",
+      "start_time": "2026-09-12T10:00:00",
+      "end_time": "2026-09-12T10:50:00",
+      "duration_minutes": 50,
+      "notes": "Enfoque en Sprint Review",
+      "created_at": "2026-09-14T15:18:51.711Z"
+    },
+    {
+      "id": "ts_seed_2_2",
+      "task_id": "task_4",
+      "project_id": "proj_estudio",
+      "type": "stopwatch",
+      "start_time": "2026-09-12T15:00:00",
+      "end_time": "2026-09-12T15:35:00",
+      "duration_minutes": 35,
+      "notes": "Lectura de Hábitos Atómicos",
+      "created_at": "2026-09-14T15:18:51.712Z"
+    },
+    {
+      "id": "ts_seed_3_1",
+      "task_id": "task_1",
+      "project_id": "proj_trabajo",
+      "type": "pomodoro",
+      "start_time": "2026-09-11T10:00:00",
+      "end_time": "2026-09-11T10:50:00",
+      "duration_minutes": 50,
+      "notes": "Enfoque en Sprint Review",
+      "created_at": "2026-09-14T15:18:51.712Z"
+    },
+    {
+      "id": "ts_seed_3_2",
+      "task_id": "task_4",
+      "project_id": "proj_estudio",
+      "type": "stopwatch",
+      "start_time": "2026-09-11T15:00:00",
+      "end_time": "2026-09-11T15:35:00",
+      "duration_minutes": 35,
+      "notes": "Lectura de Hábitos Atómicos",
+      "created_at": "2026-09-14T15:18:51.714Z"
+    },
+    {
+      "id": "ts_seed_4_1",
+      "task_id": "task_1",
+      "project_id": "proj_trabajo",
+      "type": "pomodoro",
+      "start_time": "2026-09-10T10:00:00",
+      "end_time": "2026-09-10T10:50:00",
+      "duration_minutes": 50,
+      "notes": "Enfoque en Sprint Review",
+      "created_at": "2026-09-14T15:18:51.714Z"
+    },
+    {
+      "id": "ts_seed_4_2",
+      "task_id": "task_4",
+      "project_id": "proj_estudio",
+      "type": "stopwatch",
+      "start_time": "2026-09-10T15:00:00",
+      "end_time": "2026-09-10T15:35:00",
+      "duration_minutes": 35,
+      "notes": "Lectura de Hábitos Atómicos",
+      "created_at": "2026-09-14T15:18:51.715Z"
+    },
+    {
+      "id": "ts_seed_5_1",
+      "task_id": "task_1",
+      "project_id": "proj_trabajo",
+      "type": "pomodoro",
+      "start_time": "2026-09-09T10:00:00",
+      "end_time": "2026-09-09T10:50:00",
+      "duration_minutes": 50,
+      "notes": "Enfoque en Sprint Review",
+      "created_at": "2026-09-14T15:18:51.716Z"
+    },
+    {
+      "id": "ts_seed_5_2",
+      "task_id": "task_4",
+      "project_id": "proj_estudio",
+      "type": "stopwatch",
+      "start_time": "2026-09-09T15:00:00",
+      "end_time": "2026-09-09T15:35:00",
+      "duration_minutes": 35,
+      "notes": "Lectura de Hábitos Atómicos",
+      "created_at": "2026-09-14T15:18:51.717Z"
+    },
+    {
+      "id": "ts_seed_6_1",
+      "task_id": "task_1",
+      "project_id": "proj_trabajo",
+      "type": "pomodoro",
+      "start_time": "2026-09-08T10:00:00",
+      "end_time": "2026-09-08T10:50:00",
+      "duration_minutes": 50,
+      "notes": "Enfoque en Sprint Review",
+      "created_at": "2026-09-14T15:18:51.718Z"
+    },
+    {
+      "id": "ts_seed_6_2",
+      "task_id": "task_4",
+      "project_id": "proj_estudio",
+      "type": "stopwatch",
+      "start_time": "2026-09-08T15:00:00",
+      "end_time": "2026-09-08T15:35:00",
+      "duration_minutes": 35,
+      "notes": "Lectura de Hábitos Atómicos",
+      "created_at": "2026-09-14T15:18:51.718Z"
+    }
+  ],
+  "notes": [
+    {
+      "id": "note_1",
+      "title": "Ideas para Sprint Review Q3",
+      "content": "# Puntos Clave para la Presentación\n- **Rendimiento**: Mejoramos los tiempos de carga en un 42%.\n- **Nuevas Funcionalidades**:\n  - [x] Captura rápida con lenguaje natural\n  - [x] Calendario con time-blocking interactivo\n  - [x] Gamificación con XP y rachas\n- **Feedback del Cliente**:\n  > \"La fluidez de la interfaz y la integración con el calendario nos ahorra más de 1 hora al día.\"",
+      "task_id": "task_1",
+      "project_id": "proj_trabajo",
+      "tags": "[\"sprint\",\"presentacion\"]",
+      "updated_at": "2026-09-14T15:18:51.719Z",
+      "created_at": "2026-09-14T15:18:51.719Z"
+    },
+    {
+      "id": "note_2",
+      "title": "Scratchpad de Notas Rápidas",
+      "content": "## Cosas por revisar esta semana:\n- Investigar algoritmos de *priority scheduling* con intervalos flexibles.\n- Configurar notificación en el navegador para descansos de Pomodoro.\n- Comprar té verde y frutos secos.",
+      "task_id": null,
+      "project_id": "proj_personal",
+      "tags": "[\"ideas\",\"recordatorios\"]",
+      "updated_at": "2026-09-14T15:18:51.720Z",
+      "created_at": "2026-09-14T15:18:51.720Z"
+    }
+  ],
+  "gamification_user": [
+    {
+      "id": "default_user",
+      "level": 1,
+      "xp": 0,
+      "total_xp": 0,
+      "streak_days": 1,
+      "updated_at": "2026-09-14T15:18:51.721Z"
+    }
+  ],
+  "achievements": [
+    {
+      "id": "first_task",
+      "title": "Primer Paso",
+      "description": "Completa tu primera tarea en MrFocus",
+      "icon": "CheckCircle2",
+      "unlocked": 1,
+      "unlocked_at": "2026-09-04",
+      "progress": 100,
+      "category": "tasks"
+    },
+    {
+      "id": "task_master_10",
+      "title": "En Marcha",
+      "description": "Completa 10 tareas",
+      "icon": "Flame",
+      "unlocked": 1,
+      "unlocked_at": "2026-09-11",
+      "progress": 100,
+      "category": "tasks"
+    },
+    {
+      "id": "task_master_50",
+      "title": "Máquina Imparable",
+      "description": "Completa 50 tareas con éxito",
+      "icon": "Trophy",
+      "unlocked": 0,
+      "unlocked_at": null,
+      "progress": 42,
+      "category": "tasks"
+    },
+    {
+      "id": "p1_slayer",
+      "title": "Prioridad Máxima",
+      "description": "Completa 5 tareas urgentes P1",
+      "icon": "AlertCircle",
+      "unlocked": 1,
+      "unlocked_at": "2026-09-12",
+      "progress": 100,
+      "category": "tasks"
+    },
+    {
+      "id": "first_habit",
+      "title": "Semilla del Hábito",
+      "description": "Registra tu primer hábito completado",
+      "icon": "Sparkles",
+      "unlocked": 1,
+      "unlocked_at": "2026-08-31",
+      "progress": 100,
+      "category": "habits"
+    },
+    {
+      "id": "habit_streak_7",
+      "title": "Semana de Oro",
+      "description": "Alcanza una racha de 7 días consecutivos en cualquier hábito",
+      "icon": "Zap",
+      "unlocked": 1,
+      "unlocked_at": "2026-09-07",
+      "progress": 100,
+      "category": "habits"
+    },
+    {
+      "id": "first_pomodoro",
+      "title": "En la Zona",
+      "description": "Completa tu primera sesión de enfoque Pomodoro",
+      "icon": "Timer",
+      "unlocked": 1,
+      "unlocked_at": "2026-09-09",
+      "progress": 100,
+      "category": "focus"
+    },
+    {
+      "id": "pomodoro_master",
+      "title": "Maestro del Enfoque",
+      "description": "Acumula más de 120 minutos de enfoque en Pomodoro",
+      "icon": "Target",
+      "unlocked": 1,
+      "unlocked_at": "2026-09-13",
+      "progress": 100,
+      "category": "focus"
+    },
+    {
+      "id": "morning_planner",
+      "title": "Estratega Matutino",
+      "description": "Completa una sesión de Planificación Diaria Guiada",
+      "icon": "Sun",
+      "unlocked": 1,
+      "unlocked_at": "2026-09-14",
+      "progress": 100,
+      "category": "planning"
+    },
+    {
+      "id": "time_blocker",
+      "title": "Arquitecto del Calendario",
+      "description": "Programa tareas en el calendario con Time-Blocking",
+      "icon": "Calendar",
+      "unlocked": 1,
+      "unlocked_at": "2026-09-14",
+      "progress": 100,
+      "category": "planning"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { Task, CalendarEvent, Project } from '@/types';
@@ -51,7 +51,7 @@ export function CalendarView({
   const [newEventTitle, setNewEventTitle] = useState('');
   const [newEventStart, setNewEventStart] = useState('09:00');
   const [newEventEnd, setNewEventEnd] = useState('10:00');
-  const [newEventColor, setNewEventColor] = useState('#3b82f6');
+  const [newEventColor, setNewEventColor] = useState('#18181B');
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
 
   const currentDateStr = format(currentDate, 'yyyy-MM-dd');
@@ -178,45 +178,47 @@ export function CalendarView({
   return (
     <div className="space-y-4">
       {/* Calendar Header Controls */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3.5 shadow-xs">
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1">
             <button
               onClick={handlePrev}
-              className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-100 transition-colors"
+              className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-colors"
+              aria-label="Anterior"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
               onClick={handleToday}
-              className="rounded-md px-2.5 py-1 text-xs font-medium text-zinc-800 hover:bg-zinc-100 transition-colors"
+              className="rounded-lg px-3 py-1.5 text-xs font-semibold text-[#18181B] bg-slate-100 hover:bg-slate-200 transition-colors"
             >
               Hoy
             </button>
             <button
               onClick={handleNext}
-              className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-100 transition-colors"
+              className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-colors"
+              aria-label="Siguiente"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
 
-          <h2 className="text-xs font-semibold text-zinc-900 capitalize">
+          <h2 className="text-sm font-bold text-[#18181B] capitalize pl-1">
             {format(currentDate, 'EEEE, d MMMM yyyy', { locale: es })}
           </h2>
         </div>
 
         {/* View mode switcher & Action Buttons */}
         <div className="flex items-center space-x-2">
-          <div className="flex items-center rounded-lg border border-zinc-200 bg-zinc-100 p-0.5">
+          <div className="flex items-center rounded-lg bg-slate-100 p-1">
             {(['day', 'week'] as const).map((mode) => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
-                className={`rounded-md px-2.5 py-1 text-xs font-medium transition-all ${
+                className={`rounded-md px-3 py-1 text-xs font-semibold transition-all ${
                   viewMode === mode
-                    ? 'bg-white text-zinc-950 shadow-sm'
-                    : 'text-zinc-600 hover:text-zinc-900'
+                    ? 'bg-white text-[#18181B] shadow-xs'
+                    : 'text-[#475569] hover:text-[#18181B]'
                 }`}
               >
                 {mode === 'day' ? 'Día' : 'Semana'}
@@ -228,7 +230,7 @@ export function CalendarView({
           <button
             onClick={handleAutoSchedule}
             disabled={isAutoScheduling}
-            className="flex items-center space-x-1.5 rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-zinc-800 transition-colors disabled:opacity-50"
+            className="flex items-center space-x-1.5 rounded-lg bg-[#18181B] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-slate-800 transition-all disabled:opacity-50 active:scale-[0.98]"
             title="Ubicar tareas pendientes automáticamente"
           >
             <span>{isAutoScheduling ? 'Organizando...' : 'Auto-Organizar'}</span>
@@ -237,10 +239,10 @@ export function CalendarView({
           {/* Add Event Button */}
           <button
             onClick={() => setShowEventModal(true)}
-            className="flex items-center space-x-1 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100 transition-colors"
+            className="flex items-center space-x-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#18181B] hover:bg-slate-50 transition-colors"
           >
-            <Plus className="h-3.5 w-3.5" />
-            <span>Evento</span>
+            <Plus className="h-3.5 w-3.5 text-slate-600" />
+            <span>Nuevo Evento</span>
           </button>
         </div>
       </div>
@@ -248,7 +250,7 @@ export function CalendarView({
       {/* Main Grid: Calendar Timeline + Unscheduled Backlog Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Timeline View */}
-        <div className="lg:col-span-3 rounded-xl border border-zinc-200 bg-white p-3.5 shadow-sm overflow-x-auto">
+        <div className="lg:col-span-3 rounded-xl border border-slate-200 bg-white p-4 shadow-xs overflow-x-auto">
           {viewMode === 'day' ? (
             <div className="min-w-[400px]">
               <div className="space-y-1">
@@ -273,24 +275,27 @@ export function CalendarView({
                       key={hour}
                       onDragOver={handleDragOver}
                       onDrop={(e) => handleDropOnHour(e, currentDateStr, hour)}
-                      className="group flex min-h-[56px] border-b border-zinc-100 hover:bg-zinc-50/60 transition-colors rounded-lg p-1"
+                      className="group flex min-h-[58px] border-b border-slate-100 hover:bg-[#F8FAFC] transition-colors rounded-lg p-1.5"
                     >
-                      <div className="w-14 shrink-0 text-[11px] font-mono font-medium text-zinc-400 pt-1">
+                      <div className="w-14 shrink-0 text-xs font-semibold text-slate-400 pt-1">
                         {hourFormatted}
                       </div>
 
-                      <div className="flex-1 space-y-1 pl-2">
+                      <div className="flex-1 space-y-1.5 pl-2">
                         {hourEvents.map((ev) => (
                           <div
                             key={ev.id}
-                            className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium text-white shadow-sm"
-                            style={{ backgroundColor: ev.color || '#3b82f6' }}
+                            className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold shadow-2xs transition-transform hover:scale-[1.005]"
+                            style={{
+                              backgroundColor: ev.color || '#18181B',
+                              color: '#ffffff',
+                            }}
                           >
                             <div className="flex items-center space-x-1.5 truncate">
-                              <CalendarIcon className="h-3 w-3 shrink-0" />
+                              <CalendarIcon className="h-3.5 w-3.5 shrink-0 opacity-80" />
                               <span className="truncate">{ev.title}</span>
                             </div>
-                            <span className="font-mono text-[10px] opacity-90 shrink-0">
+                            <span className="text-[11px] font-medium opacity-90 shrink-0">
                               {format(new Date(ev.startTime), 'HH:mm')} - {format(new Date(ev.endTime), 'HH:mm')}
                             </span>
                           </div>
@@ -304,25 +309,25 @@ export function CalendarView({
                             <div
                               key={t.id}
                               onClick={() => onSelectTask(t)}
-                              className={`flex items-center justify-between rounded-lg border p-2 text-xs cursor-pointer shadow-sm transition-all hover:border-zinc-400 ${
+                              className={`flex items-center justify-between rounded-lg border p-2.5 text-xs cursor-pointer shadow-2xs transition-all hover:border-slate-300 ${
                                 isDone
-                                  ? 'bg-zinc-100 border-zinc-200 text-zinc-400'
-                                  : 'bg-zinc-50 border-zinc-200 text-zinc-900'
+                                  ? 'bg-[#F8FAFC] border-slate-200 text-slate-400'
+                                  : 'bg-white border-slate-200 text-[#18181B] hover:shadow-xs'
                               }`}
                             >
                               <div className="flex items-center space-x-2 truncate">
-                                <span className={`h-1.5 w-1.5 rounded-full ${isDone ? 'bg-zinc-400' : 'bg-zinc-900'}`} />
-                                <span className={`font-medium truncate ${isDone ? 'line-through' : ''}`}>
+                                <span className={`h-2 w-2 rounded-full ${isDone ? 'bg-[#059669]' : 'bg-[#18181B]'}`} />
+                                <span className={`font-semibold truncate ${isDone ? 'line-through text-slate-400' : ''}`}>
                                   {t.title}
                                 </span>
                               </div>
 
                               <div className="flex items-center space-x-2 shrink-0">
-                                <span className="font-mono text-[10px] text-zinc-500">
+                                <span className="text-[11px] font-medium text-slate-500">
                                   {t.scheduledStart && format(new Date(t.scheduledStart), 'HH:mm')} ({formatMinutes(t.estimatedMinutes || 30)})
                                 </span>
-                                <span className={`rounded px-1 text-[9px] font-medium border ${priorityMeta.bg} ${priorityMeta.color} ${priorityMeta.border}`}>
-                                  P{t.priority}
+                                <span className={`rounded-md px-2 py-0.5 text-[10px] font-semibold border ${priorityMeta.bg} ${priorityMeta.color} ${priorityMeta.border}`}>
+                                  {priorityMeta.label}
                                 </span>
                               </div>
                             </div>
@@ -347,27 +352,27 @@ export function CalendarView({
                     key={dayStr}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDropOnHour(e, dayStr, 9)}
-                    className={`flex flex-col rounded-xl border p-2 min-h-[340px] ${
+                    className={`flex flex-col rounded-xl border p-2.5 min-h-[360px] transition-all ${
                       isCurrent
-                        ? 'border-zinc-400 bg-zinc-50/70'
-                        : 'border-zinc-200 bg-white'
+                        ? 'border-[#18181B] bg-slate-50/50 shadow-2xs'
+                        : 'border-slate-200 bg-white hover:border-slate-300'
                     }`}
                   >
-                    <div className="text-center pb-1.5 border-b border-zinc-100">
-                      <span className="text-[10px] font-medium uppercase text-zinc-400">
+                    <div className="text-center pb-2 border-b border-slate-100">
+                      <span className="text-[11px] font-bold uppercase text-slate-400">
                         {format(day, 'EEE', { locale: es })}
                       </span>
-                      <h4 className={`text-xs font-semibold ${isCurrent ? 'text-zinc-950 font-bold' : 'text-zinc-700'}`}>
+                      <h4 className={`text-sm font-bold mt-0.5 ${isCurrent ? 'text-[#18181B]' : 'text-slate-700'}`}>
                         {format(day, 'd')}
                       </h4>
                     </div>
 
-                    <div className="mt-1.5 flex-1 space-y-1 overflow-y-auto">
+                    <div className="mt-2 flex-1 space-y-1.5 overflow-y-auto">
                       {dayEvents.map((ev) => (
                         <div
                           key={ev.id}
-                          className="rounded p-1 text-[10px] font-medium text-white truncate"
-                          style={{ backgroundColor: ev.color || '#3b82f6' }}
+                          className="rounded-lg p-1.5 text-[11px] font-semibold truncate text-white shadow-2xs"
+                          style={{ backgroundColor: ev.color || '#18181B' }}
                         >
                           {ev.title}
                         </div>
@@ -377,7 +382,7 @@ export function CalendarView({
                         <div
                           key={t.id}
                           onClick={() => onSelectTask(t)}
-                          className="rounded bg-zinc-50 p-1 text-[10px] font-medium text-zinc-800 border border-zinc-200 truncate cursor-pointer hover:border-zinc-400"
+                          className="rounded-lg bg-slate-50 p-1.5 text-[11px] font-medium text-[#18181B] border border-slate-200 truncate cursor-pointer hover:border-slate-300 hover:bg-white transition-all shadow-2xs"
                         >
                           {t.title}
                         </div>
@@ -391,24 +396,24 @@ export function CalendarView({
         </div>
 
         {/* Backlog Sidebar */}
-        <div className="rounded-xl border border-zinc-200 bg-white p-3.5 shadow-sm flex flex-col max-h-[600px]">
-          <div className="flex items-center justify-between pb-2.5 border-b border-zinc-100">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex flex-col max-h-[600px]">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-700">
-                Backlog por Agendar
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B]">
+                Por Agendar
               </h3>
-              <p className="text-[10px] text-zinc-400">
+              <p className="text-[11px] text-slate-400">
                 Arrastra al calendario para asignar hora
               </p>
             </div>
-            <span className="rounded bg-zinc-100 px-1.5 py-0.2 text-[10px] font-medium text-zinc-700">
+            <span className="rounded-md bg-slate-100 px-2.5 py-0.5 text-xs font-bold text-slate-700">
               {unscheduledTasks.length}
             </span>
           </div>
 
-          <div className="mt-2.5 flex-1 space-y-1.5 overflow-y-auto pr-1">
+          <div className="mt-3 flex-1 space-y-2 overflow-y-auto pr-1">
             {unscheduledTasks.length === 0 ? (
-              <p className="py-6 text-center text-xs text-zinc-400 italic">
+              <p className="py-8 text-center text-xs text-slate-400 font-medium">
                 No hay tareas pendientes sin agendar
               </p>
             ) : (
@@ -420,23 +425,23 @@ export function CalendarView({
                     draggable
                     onDragStart={(e) => handleDragStartTask(e, task.id)}
                     onClick={() => onSelectTask(task)}
-                    className="group rounded-lg border border-zinc-200 bg-zinc-50 p-2.5 text-xs cursor-grab active:cursor-grabbing hover:border-zinc-400 hover:bg-white transition-all"
+                    className="group rounded-lg border border-slate-200 bg-[#F8FAFC] p-3 text-xs cursor-grab active:cursor-grabbing hover:border-slate-300 hover:bg-white hover:shadow-xs transition-all"
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-medium text-zinc-900 truncate">
+                      <span className="font-semibold text-[#18181B] truncate">
                         {task.title}
                       </span>
-                      <span className={`shrink-0 rounded px-1 text-[9px] font-medium border ${priorityMeta.bg} ${priorityMeta.color} ${priorityMeta.border}`}>
-                        P{task.priority}
+                      <span className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-semibold border ${priorityMeta.bg} ${priorityMeta.color} ${priorityMeta.border}`}>
+                        {priorityMeta.label}
                       </span>
                     </div>
 
-                    <div className="mt-1.5 flex items-center justify-between text-[10px] text-zinc-400">
+                    <div className="mt-2 flex items-center justify-between text-[11px] text-[#475569] font-medium">
                       <span className="flex items-center space-x-1">
-                        <Clock className="h-3 w-3" />
+                        <Clock className="h-3.5 w-3.5 text-slate-400" />
                         <span>{formatMinutes(task.estimatedMinutes || 30)}</span>
                       </span>
-                      <span className="flex items-center space-x-1 text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="flex items-center space-x-1 text-[#059669] font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                         <Move className="h-3 w-3" />
                         <span>Arrastrar</span>
                       </span>
@@ -451,75 +456,82 @@ export function CalendarView({
 
       {/* New Event Modal */}
       {showEventModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-5 shadow-xl">
-            <h3 className="text-sm font-semibold text-zinc-900 mb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl animate-in fade-in zoom-in-95">
+            <h3 className="text-base font-bold text-[#18181B] mb-4">
               Nuevo Evento de Calendario
             </h3>
-            <form onSubmit={handleCreateEvent} className="space-y-3">
+            <form onSubmit={handleCreateEvent} className="space-y-4">
               <div>
-                <label className="text-[10px] font-medium text-zinc-500 uppercase">Título</label>
+                <label className="text-xs font-semibold text-[#475569]">Título del evento</label>
                 <input
                   type="text"
                   required
                   value={newEventTitle}
                   onChange={(e) => setNewEventTitle(e.target.value)}
-                  placeholder="Ej: Reunión de sincronización..."
-                  className="mt-1 w-full rounded-lg border border-zinc-200 bg-zinc-50 p-2 text-xs text-zinc-900 focus:bg-white focus:outline-none focus:border-zinc-400"
+                  placeholder="Ej: Reunión con el equipo..."
+                  className="mt-1.5 w-full rounded-lg border border-slate-200 bg-[#F8FAFC] px-3.5 py-2.5 text-xs text-[#18181B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#18181B] focus:border-[#18181B] transition-all"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase">Inicio</label>
+                  <label className="text-xs font-semibold text-[#475569]">Hora Inicio</label>
                   <input
                     type="time"
                     value={newEventStart}
                     onChange={(e) => setNewEventStart(e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-zinc-200 bg-zinc-50 p-2 text-xs text-zinc-900 focus:outline-none focus:border-zinc-400"
+                    className="mt-1.5 w-full rounded-lg border border-slate-200 bg-[#F8FAFC] px-3 py-2 text-xs text-[#18181B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#18181B] focus:border-[#18181B]"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase">Fin</label>
+                  <label className="text-xs font-semibold text-[#475569]">Hora Fin</label>
                   <input
                     type="time"
                     value={newEventEnd}
                     onChange={(e) => setNewEventEnd(e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-zinc-200 bg-zinc-50 p-2 text-xs text-zinc-900 focus:outline-none focus:border-zinc-400"
+                    className="mt-1.5 w-full rounded-lg border border-slate-200 bg-[#F8FAFC] px-3 py-2 text-xs text-[#18181B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#18181B] focus:border-[#18181B]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[10px] font-medium text-zinc-500 uppercase">Color</label>
-                <div className="mt-1 flex items-center space-x-2">
-                  {['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#64748b'].map((c) => (
+                <label className="text-xs font-semibold text-[#475569]">Color distintivo</label>
+                <div className="mt-2 flex items-center space-x-3">
+                  {[
+                    { hex: '#18181B', label: 'Grafito' },
+                    { hex: '#059669', label: 'Esmeralda' },
+                    { hex: '#0284c7', label: 'Azul' },
+                    { hex: '#d97706', label: 'Ámbar' },
+                    { hex: '#e11d48', label: 'Rojo' },
+                  ].map((item) => (
                     <button
-                      key={c}
+                      key={item.hex}
                       type="button"
-                      onClick={() => setNewEventColor(c)}
-                      className={`h-5 w-5 rounded-full border-2 transition-transform ${
-                        newEventColor === c ? 'scale-110 border-zinc-900' : 'border-transparent'
+                      onClick={() => setNewEventColor(item.hex)}
+                      className={`h-7 w-7 rounded-lg border-2 transition-all ${
+                        newEventColor === item.hex ? 'scale-115 border-slate-800 shadow-sm' : 'border-transparent hover:scale-105'
                       }`}
-                      style={{ backgroundColor: c }}
+                      style={{ backgroundColor: item.hex }}
+                      title={item.label}
                     />
                   ))}
                 </div>
               </div>
 
-              <div className="flex items-center justify-end space-x-2 pt-2">
+              <div className="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowEventModal(false)}
-                  className="rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100"
+                  className="rounded-lg px-4 py-2 text-xs font-semibold text-[#475569] hover:bg-slate-100 transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-zinc-800"
+                  className="rounded-lg bg-[#18181B] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-slate-800 transition-all"
                 >
-                  Crear Evento
+                  Guardar Evento
                 </button>
               </div>
             </form>

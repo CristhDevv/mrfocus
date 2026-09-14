@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Task, Project } from '@/types';
@@ -59,23 +59,25 @@ export default function TasksPage() {
       {/* Top Page Header */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-900 flex items-center space-x-2">
-            <CheckSquare className="h-5 w-5 text-zinc-800" />
+          <h1 className="text-xl font-extrabold text-[#18181B] flex items-center space-x-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-[#18181B]">
+              <CheckSquare className="h-4 w-4" />
+            </div>
             <span>Gestión de Tareas</span>
           </h1>
-          <p className="text-xs text-zinc-500 mt-0.5">
+          <p className="text-xs text-slate-500 mt-1 font-medium">
             Organiza tus tareas y proyectos en Vista de Lista o Tablero Kanban
           </p>
         </div>
 
         {/* View Switcher Toggle */}
-        <div className="flex items-center rounded-lg border border-zinc-200 bg-zinc-100 p-0.5 self-start sm:self-auto">
+        <div className="flex items-center rounded-xl bg-slate-100 p-1 self-start sm:self-auto border border-slate-200/60">
           <button
             onClick={() => setViewMode('list')}
-            className={`flex items-center space-x-1.5 rounded-md px-3 py-1 text-xs font-medium transition-all ${
+            className={`flex items-center space-x-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold transition-all ${
               viewMode === 'list'
-                ? 'bg-white text-zinc-950 shadow-sm'
-                : 'text-zinc-600 hover:text-zinc-900'
+                ? 'bg-[#18181B] text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <List className="h-3.5 w-3.5" />
@@ -83,14 +85,14 @@ export default function TasksPage() {
           </button>
           <button
             onClick={() => setViewMode('kanban')}
-            className={`flex items-center space-x-1.5 rounded-md px-3 py-1 text-xs font-medium transition-all ${
+            className={`flex items-center space-x-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold transition-all ${
               viewMode === 'kanban'
-                ? 'bg-white text-zinc-950 shadow-sm'
-                : 'text-zinc-600 hover:text-zinc-900'
+                ? 'bg-[#18181B] text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Kanban className="h-3.5 w-3.5" />
-            <span>Kanban</span>
+            <span>Tablero Kanban</span>
           </button>
         </div>
       </div>

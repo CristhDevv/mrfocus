@@ -13,11 +13,11 @@ interface TaskKanbanViewProps {
   onDeleteTask?: (id: string) => void;
 }
 
-const COLUMNS: { id: TaskStatus; title: string; color: string; dot: string }[] = [
-  { id: 'todo', title: 'Por Hacer', color: 'text-zinc-700', dot: 'bg-zinc-400' },
-  { id: 'in_progress', title: 'En Progreso', color: 'text-zinc-900', dot: 'bg-zinc-800' },
-  { id: 'review', title: 'En Revisión', color: 'text-zinc-600', dot: 'bg-zinc-500' },
-  { id: 'done', title: 'Completadas', color: 'text-emerald-700', dot: 'bg-emerald-600' },
+const COLUMNS: { id: TaskStatus; title: string; color: string; dot: string; headerBg: string }[] = [
+  { id: 'todo', title: 'Por Hacer', color: 'text-[#18181B]', dot: 'bg-slate-400', headerBg: 'bg-slate-100' },
+  { id: 'in_progress', title: 'En Progreso', color: 'text-[#18181B]', dot: 'bg-sky-500', headerBg: 'bg-sky-50 border border-sky-100' },
+  { id: 'review', title: 'En Revisión', color: 'text-[#18181B]', dot: 'bg-amber-500', headerBg: 'bg-amber-50 border border-amber-100' },
+  { id: 'done', title: 'Completadas', color: 'text-[#059669]', dot: 'bg-[#059669]', headerBg: 'bg-[#ecfdf5] border border-[#a7f3d0]' },
 ];
 
 export function TaskKanbanView({
@@ -79,19 +79,19 @@ export function TaskKanbanView({
             key={col.id}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, col.id)}
-            className="flex flex-col rounded-xl border border-zinc-200 bg-zinc-50/50 p-3 min-h-[500px]"
+            className="flex flex-col rounded-2xl border border-slate-200 bg-[#F8FAFC] p-3.5 min-h-[520px]"
           >
             {/* Column Header */}
-            <div className="flex items-center justify-between pb-3 px-1">
+            <div className={`flex items-center justify-between px-3 py-2 rounded-xl mb-3 ${col.headerBg}`}>
               <div className="flex items-center space-x-2">
-                <span className={`h-2 w-2 rounded-full ${col.dot}`} />
-                <h3 className={`text-xs font-semibold uppercase tracking-wider ${col.color}`}>
+                <span className={`h-2.5 w-2.5 rounded-full ${col.dot}`} />
+                <h3 className={`text-xs font-bold tracking-wide ${col.color}`}>
                   {col.title}
                 </h3>
-                <span className="rounded bg-zinc-200/70 px-1.5 py-0.2 text-[10px] font-medium text-zinc-700">
-                  {columnTasks.length}
-                </span>
               </div>
+              <span className="rounded-md bg-white px-2 py-0.5 text-[11px] font-bold text-slate-700 shadow-2xs border border-slate-100">
+                {columnTasks.length}
+              </span>
             </div>
 
             {/* Column Task Cards */}
@@ -114,7 +114,7 @@ export function TaskKanbanView({
               ))}
 
               {columnTasks.length === 0 && (
-                <div className="rounded-lg border border-dashed border-zinc-200 p-6 text-center text-xs text-zinc-400">
+                <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center text-xs text-slate-400 font-medium">
                   Arrastra tareas aquí
                 </div>
               )}

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Task, Habit, CalendarEvent } from '@/types';
@@ -15,6 +15,7 @@ import {
   Activity,
   Check,
   X,
+  Sparkles,
 } from 'lucide-react';
 import { getPriorityLabel, formatMinutes } from '@/lib/utils';
 
@@ -147,59 +148,61 @@ export function DailyPlanningModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 p-4 backdrop-blur-sm animate-in fade-in duration-100">
-      <div className="w-full max-w-xl overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-xs animate-in fade-in duration-150">
+      <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-3.5">
-          <div className="flex items-center space-x-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900 text-white">
-              <Calendar className="h-4 w-4" />
+        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+          <div className="flex items-center space-x-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#18181B] text-white shadow-xs">
+              <Sparkles className="h-5 w-5 text-[#059669]" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-zinc-900">
-                Planificación Diaria Guiada
+              <h2 className="text-sm font-bold text-[#18181B]">
+                Planificación de mi Día
               </h2>
-              <p className="text-[11px] text-zinc-500">
-                Paso {step} de 4 • Organiza tu jornada con time-blocking
+              <p className="text-[11px] font-medium text-[#475569]">
+                Paso {step} de 4 • Organiza tu jornada con calma
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors"
+            className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 max-h-[65vh] overflow-y-auto">
+        <div className="p-6 max-h-[65vh] overflow-y-auto">
           {/* STEP 1: Overview */}
           {step === 1 && (
             <div className="space-y-4">
-              <div className="rounded-lg bg-zinc-50 p-3.5 border border-zinc-200">
-                <h3 className="text-xs font-semibold text-zinc-900">
-                  1. Punto de partida de hoy
+              <div className="rounded-xl bg-[#F8FAFC] p-4 border border-slate-200">
+                <h3 className="text-xs font-bold text-[#18181B]">
+                  1. Panorama de tu día
                 </h3>
-                <p className="mt-1 text-xs text-zinc-600">
-                  Tienes <strong className="text-zinc-900">{tasks.filter((t) => t.status !== 'done').length} tareas</strong> pendientes en el backlog y <strong className="text-zinc-900">{events.length} eventos fijados</strong> para hoy.
+                <p className="mt-1 text-xs text-[#475569]">
+                  Tienes <strong className="text-[#18181B]">{tasks.filter((t) => t.status !== 'done').length} tareas</strong> pendientes en tu lista y <strong className="text-[#18181B]">{events.length} compromisos fijados</strong> para hoy.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
-                  Eventos y reuniones programadas:
+                <h4 className="text-[11px] font-semibold uppercase tracking-wider text-[#475569]">
+                  Eventos y reuniones fijadas:
                 </h4>
                 {events.length === 0 ? (
-                  <p className="text-xs text-zinc-400 italic py-2">No hay eventos fijos hoy. Tienes la jornada disponible.</p>
+                  <p className="text-xs text-slate-400 italic py-3 text-center rounded-lg bg-slate-50 border border-slate-100">
+                    No tienes reuniones fijas hoy. Tienes toda la jornada disponible para tus proyectos.
+                  </p>
                 ) : (
                   events.map((ev) => (
-                    <div key={ev.id} className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 text-xs border border-zinc-100">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-3.5 w-3.5 text-zinc-500" />
-                        <span className="font-medium text-zinc-800">{ev.title}</span>
+                    <div key={ev.id} className="flex items-center justify-between rounded-lg bg-[#F8FAFC] p-3 text-xs border border-slate-200">
+                      <div className="flex items-center space-x-2.5">
+                        <Clock className="h-4 w-4 text-slate-500" />
+                        <span className="font-semibold text-[#18181B]">{ev.title}</span>
                       </div>
-                      <span className="font-mono text-zinc-500 text-[11px]">
+                      <span className="font-mono text-slate-600 text-[11px] font-medium bg-white px-2 py-0.5 rounded-md border border-slate-200">
                         {new Date(ev.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })} - {new Date(ev.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
                       </span>
                     </div>
@@ -212,27 +215,29 @@ export function DailyPlanningModal({
           {/* STEP 2: Review Habits */}
           {step === 2 && (
             <div className="space-y-4">
-              <div className="rounded-lg bg-zinc-50 p-3.5 border border-zinc-200">
-                <h3 className="text-xs font-semibold text-zinc-900">
-                  2. Hábitos clave
+              <div className="rounded-xl bg-[#ecfdf5] p-4 border border-[#a7f3d0]">
+                <h3 className="text-xs font-bold text-[#059669]">
+                  2. Hábitos que deseas cultivar hoy
                 </h3>
-                <p className="mt-1 text-xs text-zinc-600">
-                  Verifica los hábitos programados para mantener la consistencia:
+                <p className="mt-1 text-xs text-slate-600">
+                  Mantén el ritmo constante con tus hábitos diarios:
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {habits.map((h) => (
-                  <div key={h.id} className="flex items-center justify-between rounded-lg bg-zinc-50 p-2.5 border border-zinc-100">
-                    <div className="flex items-center space-x-2">
-                      <Activity className="h-3.5 w-3.5 text-zinc-600" />
+                  <div key={h.id} className="flex items-center justify-between rounded-xl bg-white p-3 border border-slate-200 shadow-2xs">
+                    <div className="flex items-center space-x-2.5">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#ecfdf5] text-[#059669]">
+                        <Activity className="h-3.5 w-3.5" />
+                      </div>
                       <div>
-                        <span className="text-xs font-medium text-zinc-900">{h.name}</span>
-                        <span className="block text-[10px] text-zinc-400">{h.category}</span>
+                        <span className="text-xs font-bold text-[#18181B]">{h.name}</span>
+                        <span className="block text-[10px] text-slate-400 capitalize">{h.category}</span>
                       </div>
                     </div>
-                    <span className="rounded bg-zinc-200/70 px-1.5 py-0.5 text-[10px] font-medium text-zinc-700">
-                      {h.streak}d racha
+                    <span className="rounded-md bg-[#ecfdf5] px-2 py-0.5 text-[10px] font-bold text-[#059669] border border-[#a7f3d0]">
+                      {h.streak} días racha
                     </span>
                   </div>
                 ))}
@@ -243,12 +248,12 @@ export function DailyPlanningModal({
           {/* STEP 3: Select Tasks & Estimates */}
           {step === 3 && (
             <div className="space-y-4">
-              <div className="rounded-lg bg-zinc-50 p-3.5 border border-zinc-200">
-                <h3 className="text-xs font-semibold text-zinc-900">
-                  3. Selección de tareas y estimación de tiempo
+              <div className="rounded-xl bg-[#F8FAFC] p-4 border border-slate-200">
+                <h3 className="text-xs font-bold text-[#18181B]">
+                  3. Selecciona qué tareas harás hoy
                 </h3>
-                <p className="mt-1 text-xs text-zinc-600">
-                  Seleccionadas: <strong>{selectedTaskIds.length} tareas</strong>. Ajusta los minutos necesarios por cada tarea:
+                <p className="mt-1 text-xs text-[#475569]">
+                  Has seleccionado <strong className="text-[#18181B]">{selectedTaskIds.length} tareas</strong>. Pulsa para incluir/quitar y ajusta los minutos estimados:
                 </p>
               </div>
 
@@ -263,10 +268,10 @@ export function DailyPlanningModal({
                     return (
                       <div
                         key={task.id}
-                        className={`rounded-lg p-2.5 text-xs border transition-all ${
+                        className={`rounded-xl p-3 text-xs border transition-all ${
                           isSelected
-                            ? 'bg-zinc-50 border-zinc-400'
-                            : 'bg-white border-zinc-200 opacity-70'
+                            ? 'bg-white border-[#18181B] shadow-2xs'
+                            : 'bg-[#F8FAFC] border-slate-200 opacity-70'
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -275,33 +280,33 @@ export function DailyPlanningModal({
                             className="flex items-center space-x-2.5 cursor-pointer truncate flex-1"
                           >
                             {isSelected ? (
-                              <CheckCircle2 className="h-4 w-4 text-zinc-900 shrink-0" />
+                              <CheckCircle2 className="h-4 w-4 text-[#059669] shrink-0" />
                             ) : (
-                              <Circle className="h-4 w-4 text-zinc-400 shrink-0" />
+                              <Circle className="h-4 w-4 text-slate-300 shrink-0" />
                             )}
-                            <span className="font-medium text-zinc-900 truncate">
+                            <span className="font-semibold text-[#18181B] truncate">
                               {task.title}
                             </span>
                           </div>
 
-                          <span className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium border ${pMeta.bg} ${pMeta.color} ${pMeta.border}`}>
-                            P{task.priority}
+                          <span className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-bold border ${pMeta.bg} ${pMeta.color} ${pMeta.border}`}>
+                            {pMeta.label}
                           </span>
                         </div>
 
                         {isSelected && (
-                          <div className="mt-2 pt-2 border-t border-zinc-200/60 flex items-center justify-between text-[11px]">
-                            <span className="text-zinc-500">Estimación:</span>
-                            <div className="flex items-center space-x-1">
+                          <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                            <span className="text-slate-500 font-medium">¿Cuánto tiempo tomará?</span>
+                            <div className="flex items-center space-x-1.5">
                               {[15, 30, 45, 60, 90].map((m) => (
                                 <button
                                   key={m}
                                   type="button"
                                   onClick={() => handleEstimateChange(task.id, m)}
-                                  className={`rounded px-1.5 py-0.5 text-[10px] font-medium transition-all ${
+                                  className={`rounded-md px-2 py-0.5 text-[11px] font-bold transition-all ${
                                     currentEst === m
-                                      ? 'bg-zinc-900 text-white'
-                                      : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                                      ? 'bg-[#18181B] text-white shadow-2xs'
+                                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                   }`}
                                 >
                                   {m}m
@@ -322,32 +327,32 @@ export function DailyPlanningModal({
             <div className="space-y-4">
               {!isDone ? (
                 <>
-                  <div className="rounded-lg bg-zinc-50 p-4 border border-zinc-200">
+                  <div className="rounded-xl bg-white p-5 border border-slate-200 shadow-xs">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-900">
-                        4. Validación de Capacidad del Día
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B]">
+                        4. Balance de tu Jornada
                       </h3>
-                      <span className="rounded bg-zinc-200/80 px-2 py-0.5 text-[11px] font-medium text-zinc-800">
-                        {formatMinutes(totalEstimatedMinutes)} / {formatMinutes(availableWorkMinutes)} disponibles
+                      <span className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700">
+                        {formatMinutes(totalEstimatedMinutes)} de {formatMinutes(availableWorkMinutes)} libres
                       </span>
                     </div>
 
                     {/* Capacity Meter */}
-                    <div className="mt-3">
-                      <div className="flex justify-between text-[11px] text-zinc-500 mb-1">
-                        <span>Carga estimada</span>
-                        <span className={isOverloaded ? 'text-red-600 font-semibold' : 'text-zinc-900 font-medium'}>
-                          {capacityPercent}%
+                    <div className="mt-3.5">
+                      <div className="flex justify-between text-xs text-slate-500 mb-1.5">
+                        <span>Tiempo ocupado vs libre</span>
+                        <span className={isOverloaded ? 'text-rose-700 font-bold' : 'text-[#18181B] font-semibold'}>
+                          {capacityPercent}% de tu tiempo disponible
                         </span>
                       </div>
-                      <div className="h-2 w-full rounded-full bg-zinc-200 overflow-hidden">
+                      <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all duration-300 ${
                             isOverloaded
-                              ? 'bg-red-500'
+                              ? 'bg-rose-500'
                               : capacityPercent > 85
                               ? 'bg-amber-500'
-                              : 'bg-zinc-900'
+                              : 'bg-[#059669]'
                           }`}
                           style={{ width: `${Math.min(100, capacityPercent)}%` }}
                         />
@@ -355,46 +360,46 @@ export function DailyPlanningModal({
                     </div>
 
                     {isOverloaded && (
-                      <div className="mt-3 flex items-start space-x-2 rounded-lg bg-red-50 p-2.5 text-xs text-red-700 border border-red-200">
-                        <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-red-600" />
+                      <div className="mt-3.5 flex items-start space-x-2.5 rounded-xl bg-rose-50 p-3 text-xs text-rose-700 border border-rose-200">
+                        <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-rose-600" />
                         <span>
-                          <strong>Alerta de sobrecarga:</strong> Has programado {formatMinutes(totalEstimatedMinutes)} para un total de {formatMinutes(availableWorkMinutes)} libres.
+                          <strong>Atención:</strong> Has programado {formatMinutes(totalEstimatedMinutes)} para {formatMinutes(availableWorkMinutes)} disponibles. Te sugerimos desmarcar alguna tarea para evitar sobrecarga.
                         </span>
                       </div>
                     )}
                   </div>
 
-                  <div className="rounded-lg border border-zinc-200 p-3.5 bg-white">
-                    <h4 className="text-xs font-semibold text-zinc-800">
-                      Resumen de Time-Blocking:
+                  <div className="rounded-xl border border-slate-200 p-4 bg-[#F8FAFC]">
+                    <h4 className="text-xs font-bold text-[#18181B]">
+                      Resumen del plan para hoy:
                     </h4>
-                    <ul className="mt-2 space-y-1.5 text-xs text-zinc-600">
+                    <ul className="mt-2.5 space-y-2 text-xs text-slate-600">
                       <li className="flex items-center space-x-2">
-                        <Check className="h-3.5 w-3.5 text-zinc-700" />
-                        <span>{selectedTaskIds.length} tareas seleccionadas</span>
+                        <Check className="h-4 w-4 text-[#059669]" />
+                        <span><strong>{selectedTaskIds.length} tareas</strong> seleccionadas con tiempo estimado</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <Check className="h-3.5 w-3.5 text-zinc-700" />
-                        <span>{events.length} reuniones protegidas</span>
+                        <Check className="h-4 w-4 text-[#059669]" />
+                        <span><strong>{events.length} reuniones</strong> protegidas sin solapamientos</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <Check className="h-3.5 w-3.5 text-zinc-700" />
-                        <span>El algoritmo ubicará las tareas en los huecos libres respetando prioridades</span>
+                        <Check className="h-4 w-4 text-[#059669]" />
+                        <span>Ubicación automática en los huecos libres de tu calendario</span>
                       </li>
                     </ul>
                   </div>
                 </>
               ) : (
-                <div className="py-8 text-center space-y-3">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900 text-white">
-                    <Check className="h-6 w-6" />
+                <div className="py-10 text-center space-y-4">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ecfdf5] text-[#059669] shadow-xs border border-[#a7f3d0]">
+                    <Check className="h-7 w-7 stroke-[2.5]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-semibold text-zinc-900">
-                      Planificación Diaria Completada
+                    <h3 className="text-base font-bold text-[#18181B]">
+                      ¡Tu día está organizado!
                     </h3>
-                    <p className="mt-1 text-xs text-zinc-500">
-                      Tus tareas han sido organizadas en los bloques de tiempo del calendario de hoy.
+                    <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
+                      Las tareas han sido ubicadas en bloques de tiempo en tu calendario. Puedes iniciar tu primera sesión de enfoque cuando gustes.
                     </p>
                   </div>
                 </div>
@@ -404,16 +409,16 @@ export function DailyPlanningModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex items-center justify-between border-t border-zinc-100 bg-zinc-50 px-5 py-3">
+        <div className="flex items-center justify-between border-t border-slate-100 bg-[#F8FAFC] px-6 py-4">
           {!isDone ? (
             <>
               <button
                 type="button"
                 disabled={step === 1}
                 onClick={() => setStep((s) => s - 1)}
-                className="flex items-center space-x-1 rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-200 disabled:opacity-30"
+                className="flex items-center space-x-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold text-[#475569] hover:bg-slate-200 disabled:opacity-30 transition-colors"
               >
-                <ArrowLeft className="h-3.5 w-3.5" />
+                <ArrowLeft className="h-4 w-4" />
                 <span>Anterior</span>
               </button>
 
@@ -421,19 +426,19 @@ export function DailyPlanningModal({
                 <button
                   type="button"
                   onClick={() => setStep((s) => s + 1)}
-                  className="flex items-center space-x-1.5 rounded-lg bg-zinc-900 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 transition-colors"
+                  className="flex items-center space-x-1.5 rounded-lg bg-[#18181B] px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-all shadow-xs active:scale-95"
                 >
                   <span>Siguiente</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-4 w-4" />
                 </button>
               ) : (
                 <button
                   type="button"
                   disabled={isScheduling || selectedTaskIds.length === 0}
                   onClick={handleFinalizeSchedule}
-                  className="flex items-center space-x-1.5 rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 transition-colors disabled:opacity-50"
+                  className="flex items-center space-x-1.5 rounded-lg bg-[#18181B] px-5 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-all shadow-xs active:scale-95 disabled:opacity-50"
                 >
-                  <span>{isScheduling ? 'Programando...' : 'Auto-Ubicar en Calendario'}</span>
+                  <span>{isScheduling ? 'Organizando...' : 'Auto-Ubicar en Calendario'}</span>
                 </button>
               )}
             </>
@@ -441,9 +446,9 @@ export function DailyPlanningModal({
             <button
               type="button"
               onClick={onClose}
-              className="w-full rounded-lg bg-zinc-900 py-2 text-xs font-medium text-white hover:bg-zinc-800 transition-colors"
+              className="w-full rounded-lg bg-[#18181B] py-2.5 text-xs font-bold text-white hover:bg-slate-800 shadow-xs transition-colors"
             >
-              Cerrar y Ver Agenda
+              Cerrar y Ver mi Agenda
             </button>
           )}
         </div>

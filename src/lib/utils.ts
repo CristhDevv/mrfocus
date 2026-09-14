@@ -21,16 +21,16 @@ export function formatTimeRange(startIso?: string, endIso?: string): string {
   return `${formatTime(s)} - ${formatTime(e)}`;
 }
 
-export function getPriorityLabel(priority: number): { label: string; color: string; bg: string; border: string } {
+export function getPriorityLabel(priority: number): { label: string; color: string; bg: string; border: string; hex: string } {
   switch (priority) {
     case 1:
-      return { label: 'P1 Urgente', color: 'text-red-500 dark:text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/30' };
+      return { label: 'Urgente', color: 'text-rose-700', bg: 'bg-rose-50', border: 'border-rose-200', hex: '#e11d48' };
     case 2:
-      return { label: 'P2 Alta', color: 'text-orange-500 dark:text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/30' };
+      return { label: 'Alta', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200', hex: '#d97706' };
     case 3:
-      return { label: 'P3 Media', color: 'text-blue-500 dark:text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30' };
+      return { label: 'Media', color: 'text-sky-700', bg: 'bg-sky-50', border: 'border-sky-200', hex: '#0284c7' };
     case 4:
     default:
-      return { label: 'P4 Baja', color: 'text-slate-500 dark:text-slate-400', bg: 'bg-slate-500/10', border: 'border-slate-500/30' };
+      return { label: 'Normal', color: 'text-slate-600', bg: 'bg-slate-100', border: 'border-slate-200', hex: '#64748b' };
   }
 }

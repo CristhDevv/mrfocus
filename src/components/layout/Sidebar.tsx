@@ -12,6 +12,7 @@ import {
   BarChart3,
   FileText,
   Plus,
+  Sparkles,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -27,24 +28,24 @@ export function Sidebar({
 
   const navItems = [
     { label: 'Hoy', href: '/', icon: LayoutDashboard },
-    { label: 'Tareas', href: '/tasks', icon: CheckSquare },
+    { label: 'Mis Tareas', href: '/tasks', icon: CheckSquare },
     { label: 'Calendario', href: '/calendar', icon: Calendar },
     { label: 'Hábitos', href: '/habits', icon: Activity },
-    { label: 'Enfoque', href: '/focus', icon: Timer },
-    { label: 'Analíticas', href: '/analytics', icon: BarChart3 },
+    { label: 'Temporizador', href: '/focus', icon: Timer },
     { label: 'Notas', href: '/notes', icon: FileText },
+    { label: 'Estadísticas', href: '/analytics', icon: BarChart3 },
   ];
 
   return (
-    <aside className="hidden lg:flex w-60 flex-col justify-between border-r border-zinc-200/80 bg-white p-4 shrink-0">
+    <aside className="hidden lg:flex w-64 flex-col justify-between border-r border-slate-200/80 bg-white p-4 shrink-0">
       <div className="space-y-5">
         {/* Quick Add Action Button */}
         <button
           onClick={onOpenQuickCapture}
-          className="flex w-full items-center justify-center space-x-2 rounded-lg bg-zinc-900 py-2.5 px-3 text-xs font-medium text-white shadow-sm transition-all hover:bg-zinc-800 active:scale-[0.99]"
+          className="flex w-full items-center justify-center space-x-2 rounded-xl bg-[#18181B] py-2.5 px-4 text-xs font-semibold text-white shadow-xs transition-all hover:bg-slate-800 active:scale-[0.98]"
         >
-          <Plus className="h-3.5 w-3.5 stroke-[2.5]" />
-          <span>Nueva Tarea (NLP)</span>
+          <Plus className="h-4 w-4 stroke-[2.5]" />
+          <span>Nueva Tarea</span>
         </button>
 
         {/* Navigation Links */}
@@ -56,13 +57,17 @@ export function Sidebar({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+                className={`flex items-center space-x-3 rounded-xl px-3 py-2 text-xs font-medium transition-all ${
                   isActive
-                    ? 'bg-zinc-900 text-white font-medium shadow-xs'
-                    : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
+                    ? 'bg-[#18181B] text-white font-semibold shadow-xs'
+                    : 'text-[#475569] hover:bg-slate-100 hover:text-[#18181B]'
                 }`}
               >
-                <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-zinc-500'}`} />
+                <div className={`flex h-5 w-5 items-center justify-center rounded-md ${
+                  isActive ? 'text-white' : 'text-slate-400'
+                }`}>
+                  <Icon className="h-4 w-4" />
+                </div>
                 <span>{item.label}</span>
               </Link>
             );
@@ -70,14 +75,14 @@ export function Sidebar({
         </nav>
       </div>
 
-      {/* Footer Minimal Action */}
-      <div className="border-t border-zinc-100 pt-3">
+      {/* Footer Planning Helper */}
+      <div className="border-t border-slate-100 pt-4">
         <button
           onClick={onOpenDailyPlanning}
-          className="flex w-full items-center justify-center space-x-2 rounded-lg border border-zinc-200 bg-zinc-50 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-100 transition-colors"
+          className="flex w-full items-center justify-center space-x-2 rounded-xl border border-slate-200 bg-[#F8FAFC] py-2.5 px-3 text-xs font-semibold text-[#18181B] hover:bg-white hover:border-slate-300 transition-all shadow-xs"
         >
-          <Calendar className="h-3.5 w-3.5 text-zinc-500" />
-          <span>Planificación Diaria</span>
+          <Sparkles className="h-4 w-4 text-[#059669]" />
+          <span>Planificar mi Día</span>
         </button>
       </div>
     </aside>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { usePomodoro } from './PomodoroContext';
@@ -43,74 +43,77 @@ export function PomodoroFullView({ tasks = [] }: PomodoroFullViewProps) {
     }
   }, [tasks]);
 
+  const strokeColor =
+    mode === 'focus' ? '#18181B' : '#059669';
+
   const progress = totalDuration > 0 ? (totalDuration - timeLeft) / totalDuration : 0;
-  const strokeDashoffset = 2 * Math.PI * 110 * (1 - progress);
 
   return (
     <div className="flex flex-col items-center justify-center max-w-xl mx-auto py-8 px-4 text-center space-y-6">
       {/* Mode Switcher Tabs */}
-      <div className="flex items-center space-x-1.5 rounded-lg border border-zinc-200 bg-zinc-100 p-1">
+      <div className="flex items-center space-x-2 rounded-2xl border border-slate-200 bg-slate-100/80 p-1.5 shadow-xs">
         <button
           onClick={() => switchMode('focus')}
-          className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-all ${
+          className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
             mode === 'focus'
-              ? 'bg-zinc-900 text-white shadow-sm'
-              : 'text-zinc-600 hover:text-zinc-900'
+              ? 'bg-[#18181B] text-white shadow-sm'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          Enfoque (25m)
+          Enfoque (25 min)
         </button>
         <button
           onClick={() => switchMode('short_break')}
-          className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-all ${
+          className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
             mode === 'short_break'
-              ? 'bg-zinc-900 text-white shadow-sm'
-              : 'text-zinc-600 hover:text-zinc-900'
+              ? 'bg-white text-[#059669] shadow-sm font-extrabold border border-[#a7f3d0]'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          Descanso Corto (5m)
+          Descanso Corto (5 min)
         </button>
         <button
           onClick={() => switchMode('long_break')}
-          className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-all ${
+          className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
             mode === 'long_break'
-              ? 'bg-zinc-900 text-white shadow-sm'
-              : 'text-zinc-600 hover:text-zinc-900'
+              ? 'bg-white text-[#059669] shadow-sm font-extrabold border border-[#a7f3d0]'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          Descanso Largo (15m)
+          Descanso Largo (15 min)
         </button>
       </div>
 
       {/* Circular Progress Timer */}
-      <div className="relative flex items-center justify-center">
-        <svg className="h-64 w-64 -rotate-90 transform" viewBox="0 0 240 240">
+      <div className="relative flex items-center justify-center py-2">
+        <svg className="h-68 w-68 -rotate-90 transform" viewBox="0 0 240 240">
           <circle
             cx="120"
             cy="120"
-            r="110"
-            className="stroke-zinc-100"
-            strokeWidth="8"
+            r="105"
+            stroke="#f1f5f9"
+            strokeWidth="10"
             fill="transparent"
           />
           <circle
             cx="120"
             cy="120"
-            r="110"
-            className="stroke-zinc-900 transition-all duration-1000 ease-linear"
-            strokeWidth="8"
-            strokeDasharray={2 * Math.PI * 110}
-            strokeDashoffset={strokeDashoffset}
+            r="105"
+            stroke={strokeColor}
+            strokeWidth="10"
+            strokeDasharray={2 * Math.PI * 105}
+            strokeDashoffset={2 * Math.PI * 105 * (1 - progress)}
             strokeLinecap="round"
             fill="transparent"
+            className="transition-all duration-1000 ease-linear"
           />
         </svg>
 
         <div className="absolute flex flex-col items-center">
-          <span className="font-mono text-5xl font-bold tracking-tight text-zinc-900">
+          <span className="font-mono text-5xl font-extrabold tracking-tight text-[#18181B]">
             {formatTime(timeLeft)}
           </span>
-          <span className="mt-1 text-xs font-medium uppercase tracking-wider text-zinc-400">
+          <span className="mt-2 text-xs font-bold uppercase tracking-wider text-slate-500">
             {mode === 'focus' ? 'Sesión de Enfoque' : 'Tiempo de Descanso'}
           </span>
         </div>
@@ -120,15 +123,15 @@ export function PomodoroFullView({ tasks = [] }: PomodoroFullViewProps) {
       <div className="flex items-center space-x-3">
         <button
           onClick={resetTimer}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-100 transition-all"
+          className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-xs"
           title="Reiniciar temporizador"
         >
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className="h-5 w-5" />
         </button>
 
         <button
           onClick={isRunning ? pauseTimer : startTimer}
-          className="flex items-center space-x-2 rounded-lg bg-zinc-900 px-6 py-2.5 text-xs font-medium text-white shadow-sm transition-all hover:bg-zinc-800 active:scale-95"
+          className="flex items-center space-x-2.5 rounded-2xl bg-[#18181B] px-8 py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#27272a] transition-all active:scale-95"
         >
           {isRunning ? (
             <>
@@ -145,14 +148,14 @@ export function PomodoroFullView({ tasks = [] }: PomodoroFullViewProps) {
       </div>
 
       {/* Active Task Selector */}
-      <div className="w-full rounded-xl border border-zinc-200 bg-white p-4 shadow-sm text-left space-y-3">
+      <div className="w-full rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs text-left space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-700 flex items-center space-x-1.5">
-            <ListTodo className="h-3.5 w-3.5 text-zinc-600" />
+          <h4 className="text-xs font-bold uppercase tracking-wider text-[#18181B] flex items-center space-x-2">
+            <ListTodo className="h-4 w-4 text-[#18181B]" />
             <span>Tarea Activa Vinculada</span>
           </h4>
-          <span className="text-[11px] text-zinc-400">
-            {sessionsCompletedToday} sesiones hoy
+          <span className="rounded-xl bg-[#ecfdf5] border border-[#a7f3d0]/60 px-2.5 py-0.5 text-xs font-bold text-[#059669]">
+            {sessionsCompletedToday} {sessionsCompletedToday === 1 ? 'sesión hoy' : 'sesiones hoy'}
           </span>
         </div>
 
@@ -167,14 +170,24 @@ export function PomodoroFullView({ tasks = [] }: PomodoroFullViewProps) {
               setActiveTask(val, selected?.title);
             }
           }}
-          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 p-2 text-xs font-medium text-zinc-800 focus:outline-none focus:border-zinc-400"
+          className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3.5 py-2.5 text-xs font-medium text-[#18181B] focus:outline-none focus:ring-2 focus:ring-[#18181B]/10 focus:border-[#18181B] transition-all"
         >
           <option value="">(Sin tarea seleccionada - Enfoque libre)</option>
-          {availableTasks.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.title} (P{t.priority})
-            </option>
-          ))}
+          {availableTasks.map((t) => {
+            const priorityText =
+              t.priority === 1
+                ? 'Urgente'
+                : t.priority === 2
+                ? 'Alta'
+                : t.priority === 3
+                ? 'Media'
+                : 'Normal';
+            return (
+              <option key={t.id} value={t.id}>
+                {t.title} - Prioridad {priorityText}
+              </option>
+            );
+          })}
         </select>
       </div>
     </div>

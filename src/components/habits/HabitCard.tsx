@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { Habit } from '@/types';
@@ -22,10 +22,10 @@ interface HabitCardProps {
 }
 
 const ICONS_MAP: Record<string, React.ReactNode> = {
-  BookOpen: <BookOpen className="h-4 w-4 text-zinc-700" />,
-  Activity: <Activity className="h-4 w-4 text-zinc-700" />,
-  Sun: <Sun className="h-4 w-4 text-zinc-700" />,
-  Calendar: <Calendar className="h-4 w-4 text-zinc-700" />,
+  BookOpen: <BookOpen className="h-4 w-4 text-[#18181B]" />,
+  Activity: <Activity className="h-4 w-4 text-[#18181B]" />,
+  Sun: <Sun className="h-4 w-4 text-[#18181B]" />,
+  Calendar: <Calendar className="h-4 w-4 text-[#18181B]" />,
 };
 
 export function HabitCard({
@@ -55,64 +55,64 @@ export function HabitCard({
   };
 
   return (
-    <div className="flex flex-col justify-between rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-all hover:border-zinc-300">
+    <div className="flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:border-slate-300 hover:shadow-sm">
       <div>
         {/* Habit Header */}
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-100 border border-zinc-200">
-              {ICONS_MAP[habit.icon] || <Activity className="h-4 w-4 text-zinc-700" />}
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 border border-slate-200 text-[#18181B]">
+              {ICONS_MAP[habit.icon] || <Activity className="h-4 w-4 text-[#18181B]" />}
             </div>
             <div>
-              <h4 className="text-xs font-semibold text-zinc-900">
+              <h4 className="text-sm font-bold text-[#18181B]">
                 {habit.name}
               </h4>
-              <span className="text-[11px] text-zinc-500">{habit.category}</span>
+              <span className="text-xs font-medium text-slate-500">{habit.category}</span>
             </div>
           </div>
 
           <button
             onClick={() => onDeleteHabit(habit.id)}
-            className="rounded-lg p-1 text-zinc-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+            className="rounded-xl p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors"
             title="Eliminar hábito"
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
 
         {/* Streaks row */}
-        <div className="mt-3 flex items-center space-x-2 text-[11px]">
-          <span className="rounded bg-zinc-100 px-2 py-0.5 font-medium text-zinc-700 border border-zinc-200">
+        <div className="mt-3.5 flex items-center space-x-2 text-xs">
+          <span className="rounded-xl bg-[#ecfdf5] border border-[#a7f3d0]/60 px-2.5 py-0.5 font-bold text-[#059669]">
             {habit.streak} días racha
           </span>
-          <span className="text-zinc-400">
+          <span className="text-slate-500 font-medium">
             Récord: {habit.bestStreak}d
           </span>
         </div>
       </div>
 
       {/* 7-day mini check-in tracker */}
-      <div className="mt-4 border-t border-zinc-100 pt-3">
+      <div className="mt-4 border-t border-slate-100 pt-3.5">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
             Últimos 7 días
           </span>
 
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1.5">
             {last7Days.map((d) => (
               <button
                 key={d.dateStr}
                 type="button"
                 onClick={(e) => handleToggle(e, d.dateStr)}
                 title={`${d.dateStr}: ${d.isCompleted ? 'Completado' : 'Pendiente'}`}
-                className={`flex h-6 w-6 flex-col items-center justify-center rounded-md text-[10px] font-medium transition-all ${
+                className={`flex h-7 w-7 flex-col items-center justify-center rounded-xl text-[11px] font-semibold transition-all ${
                   d.isCompleted
-                    ? 'bg-zinc-900 text-white shadow-sm'
-                    : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'
+                    ? 'bg-[#059669] text-white shadow-xs ring-1 ring-[#059669]'
+                    : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                 }`}
               >
                 {d.isCompleted ? (
-                  <Check className="h-3 w-3 stroke-[2.5]" />
+                  <Check className="h-3.5 w-3.5 stroke-[2.5]" />
                 ) : (
                   <span>{d.dayLabel}</span>
                 )}

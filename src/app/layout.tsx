@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import './globals.css';
@@ -32,7 +32,7 @@ export default function RootLayout({
 
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className="min-h-screen bg-[#fafbfc] text-zinc-900 antialiased flex flex-col">
+      <body className="min-h-screen bg-[#F8FAFC] text-[#18181B] antialiased flex flex-col font-sans selection:bg-[#18181B] selection:text-white">
         <ThemeProvider>
           <PomodoroProvider>
             {/* Global Header */}

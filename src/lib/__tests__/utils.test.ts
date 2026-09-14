@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { formatMinutes, getPriorityLabel, cn } from '../utils';
 
 describe('Utility Functions', () => {
@@ -12,16 +12,16 @@ describe('Utility Functions', () => {
 
   it('should return correct priority labels and badge classes', () => {
     const p1 = getPriorityLabel(1);
-    expect(p1.label).toBe('P1 Urgente');
+    expect(p1.label).toBe('Urgente');
 
     const p2 = getPriorityLabel(2);
-    expect(p2.label).toBe('P2 Alta');
+    expect(p2.label).toBe('Alta');
 
     const p3 = getPriorityLabel(3);
-    expect(p3.label).toBe('P3 Media');
+    expect(p3.label).toBe('Media');
 
     const p4 = getPriorityLabel(4);
-    expect(p4.label).toBe('P4 Baja');
+    expect(p4.label).toBe('Normal');
   });
 
   it('should merge tailwind classes with cn helper', () => {
