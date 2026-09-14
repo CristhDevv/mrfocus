@@ -201,7 +201,17 @@ export function TaskListView({
 
       {/* Task Sections List */}
       <div className="space-y-4">
-        {filterTab === 'all' ? (
+        {filteredTasks.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-200 p-10 text-center bg-white shadow-xs">
+            <Inbox className="mx-auto h-8 w-8 text-slate-300" />
+            <p className="mt-2 text-xs sm:text-sm font-semibold text-[#18181B]">
+              No hay tareas registradas
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              Usa el botón de captura rápida o la barra de entrada para crear tu primera tarea.
+            </p>
+          </div>
+        ) : filterTab === 'all' ? (
           <>
             {renderSection('Vencidas', overdueTasks.length, overdueTasks, 'overdue', <AlertTriangle className="h-4 w-4 text-rose-600" />, 'bg-rose-50 text-rose-700 border border-rose-200')}
             {renderSection('Para Hoy', todayTasks.length, todayTasks, 'today', <Calendar className="h-4 w-4 text-slate-600" />, 'bg-slate-100 text-[#18181B] border border-slate-200')}
@@ -211,28 +221,16 @@ export function TaskListView({
           </>
         ) : (
           <div className="space-y-2">
-            {filteredTasks.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-200 p-10 text-center bg-white shadow-xs">
-                <Inbox className="mx-auto h-8 w-8 text-slate-300" />
-                <p className="mt-2 text-xs sm:text-sm font-semibold text-[#18181B]">
-                  No hay tareas en esta vista
-                </p>
-                <p className="text-xs text-slate-400 mt-1">
-                  Usa el botón de captura arriba para añadir una tarea fácilmente.
-                </p>
-              </div>
-            ) : (
-              filteredTasks.map((t) => (
-                <TaskCard
-                  key={t.id}
-                  task={t}
-                  project={t.projectId ? projectMap.get(t.projectId) : undefined}
-                  onUpdateTask={onUpdateTask}
-                  onSelectTask={onSelectTask}
-                  onDeleteTask={onDeleteTask}
-                />
-              ))
-            )}
+            {filteredTasks.map((t) => (
+              <TaskCard
+                key={t.id}
+                task={t}
+                project={t.projectId ? projectMap.get(t.projectId) : undefined}
+                onUpdateTask={onUpdateTask}
+                onSelectTask={onSelectTask}
+                onDeleteTask={onDeleteTask}
+              />
+            ))}
           </div>
         )}
       </div>

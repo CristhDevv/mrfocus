@@ -226,17 +226,31 @@ export default function HabitsPage() {
           Hábitos Activos ({habits.length})
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {habits.map((habit) => (
-            <HabitCard
-              key={habit.id}
-              habit={habit}
-              onToggleToday={(id) => handleToggleDate(id, format(new Date(), 'yyyy-MM-dd'))}
-              onToggleDate={handleToggleDate}
-              onDeleteHabit={handleDeleteHabit}
-            />
-          ))}
-        </div>
+        {habits.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-[#18181B]">
+              <Activity className="h-6 w-6" />
+            </div>
+            <p className="mt-3 text-xs font-bold text-[#18181B]">
+              No tienes hábitos creados todavía
+            </p>
+            <p className="mt-1 text-xs font-medium text-slate-400">
+              Haz clic en &quot;Nuevo Hábito&quot; para registrar tus rutinas diarias y construir rachas.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {habits.map((habit) => (
+              <HabitCard
+                key={habit.id}
+                habit={habit}
+                onToggleToday={(id) => handleToggleDate(id, format(new Date(), 'yyyy-MM-dd'))}
+                onToggleDate={handleToggleDate}
+                onDeleteHabit={handleDeleteHabit}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

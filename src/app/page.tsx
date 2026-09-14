@@ -190,48 +190,54 @@ export default function TodayDashboard() {
           </span>
         </div>
 
-        <div className="mt-3.5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {habits.map((habit) => {
-            const isCompleted = habit.completedDates.includes(todayStr);
-            return (
-              <button
-                key={habit.id}
-                type="button"
-                onClick={() => handleToggleHabit(habit.id)}
-                className={`flex items-center space-x-3 rounded-xl border p-3 text-left transition-all ${
-                  isCompleted
-                    ? 'border-[#a7f3d0] bg-[#ecfdf5] text-[#18181B] shadow-2xs'
-                    : 'border-slate-200 bg-slate-50/60 hover:bg-white hover:border-slate-300 text-slate-700'
-                }`}
-              >
-                <div
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition-all ${
-                    isCompleted ? 'bg-[#059669] text-white shadow-xs' : 'bg-white text-slate-500 border border-slate-200'
+        {habits.length === 0 ? (
+          <p className="mt-3 text-xs text-slate-400 font-medium py-3 text-center">
+            No tienes hábitos registrados. Ve a la sección de Hábitos para agregar tus rutinas.
+          </p>
+        ) : (
+          <div className="mt-3.5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {habits.map((habit) => {
+              const isCompleted = habit.completedDates?.includes(todayStr) ?? false;
+              return (
+                <button
+                  key={habit.id}
+                  type="button"
+                  onClick={() => handleToggleHabit(habit.id)}
+                  className={`flex items-center space-x-3 rounded-xl border p-3 text-left transition-all ${
+                    isCompleted
+                      ? 'border-[#a7f3d0] bg-[#ecfdf5] text-[#18181B] shadow-2xs'
+                      : 'border-slate-200 bg-slate-50/60 hover:bg-white hover:border-slate-300 text-slate-700'
                   }`}
                 >
-                  {isCompleted ? (
-                    <Check className="h-4 w-4 stroke-[2.5]" />
-                  ) : (
-                    ICONS_MAP[habit.icon] || <Activity className="h-4 w-4" />
-                  )}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <span
-                    className={`block text-xs font-bold truncate ${
-                      isCompleted ? 'line-through text-slate-400' : 'text-[#18181B]'
+                  <div
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition-all ${
+                      isCompleted ? 'bg-[#059669] text-white shadow-xs' : 'bg-white text-slate-500 border border-slate-200'
                     }`}
                   >
-                    {habit.name}
-                  </span>
-                  <span className="text-[10px] font-medium text-slate-400">
-                    {habit.streak} días racha
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                    {isCompleted ? (
+                      <Check className="h-4 w-4 stroke-[2.5]" />
+                    ) : (
+                      ICONS_MAP[habit.icon] || <Activity className="h-4 w-4" />
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <span
+                      className={`block text-xs font-bold truncate ${
+                        isCompleted ? 'line-through text-slate-400' : 'text-[#18181B]'
+                      }`}
+                    >
+                      {habit.name}
+                    </span>
+                    <span className="text-[10px] font-medium text-slate-400">
+                      {habit.streak} días racha
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Main Two-Column Layout: Left Today's Tasks, Right Today's Time-Blocked Schedule */}

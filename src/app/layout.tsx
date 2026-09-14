@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeContext';
 import { PomodoroProvider } from '@/components/pomodoro/PomodoroContext';
@@ -17,18 +17,6 @@ export default function RootLayout({
 }) {
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [isDailyPlanningOpen, setIsDailyPlanningOpen] = useState(false);
-
-  useEffect(() => {
-    // Check if initial tasks exist, otherwise auto-seed
-    fetch('/api/tasks')
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.tasks || data.tasks.length === 0) {
-          fetch('/api/seed', { method: 'POST' });
-        }
-      })
-      .catch(() => {});
-  }, []);
 
   return (
     <html lang="es" suppressHydrationWarning>
