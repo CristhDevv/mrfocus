@@ -97,6 +97,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <title>mr focus — Enfócate. Logra. Repite.</title>
+        <meta name="description" content="mr focus — Tu espacio privado de productividad personal y enfoque continuo" />
+        <meta name="theme-color" content="#18181B" />
+        <link rel="icon" href="/logo-icon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo-icon.png" />
+      </head>
       <body className="min-h-screen bg-[#F8FAFC] text-[#18181B] antialiased flex flex-col font-sans selection:bg-[#18181B] selection:text-white">
         <AuthProvider>
           <ThemeProvider>

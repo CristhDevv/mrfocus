@@ -45,16 +45,20 @@ export function Header({
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3.5 sm:px-6">
         {/* Left: Brand / Logo */}
         <div className="flex items-center space-x-2.5">
-          <Link href="/" className="group flex items-center space-x-2">
-            <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-[#18181B] text-white shadow-xs transition-transform duration-200 group-hover:scale-105">
-              <CheckSquare className="h-4 w-4 sm:h-5 sm:w-5 stroke-[2.2]" />
+          <Link href="/" className="group flex items-center space-x-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white border border-slate-200/80 shadow-xs transition-transform duration-200 group-hover:scale-105 overflow-hidden p-1">
+              <img
+                src="/logo-icon.png"
+                alt="Mr. Focus"
+                className="h-full w-full object-contain"
+              />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm sm:text-base font-bold tracking-tight text-[#18181B]">
-                MrFocus
+              <span className="text-sm sm:text-base font-extrabold tracking-tight text-[#18181B] leading-none">
+                mr focus
               </span>
-              <span className="text-[10px] sm:text-[11px] font-medium text-[#475569] -mt-0.5 hidden sm:block">
-                Claridad y enfoque
+              <span className="text-[10px] sm:text-[11px] font-medium text-[#475569] mt-0.5 hidden sm:block leading-none">
+                Enfócate. Logra. Repite.
               </span>
             </div>
           </Link>

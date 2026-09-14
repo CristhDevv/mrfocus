@@ -48,13 +48,14 @@ export function AuthScreen() {
     <div className="min-h-screen w-full bg-[#F8FAFC] text-[#18181B] flex flex-col justify-center items-center p-4 sm:p-6 selection:bg-[#18181B] selection:text-white">
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#18181B] text-white shadow-xs">
-            <Sparkles className="h-6 w-6 text-[#059669]" />
+        <div className="text-center space-y-3">
+          <div className="inline-flex h-20 w-auto items-center justify-center p-1">
+            <img
+              src="/logo.png"
+              alt="mr focus - Enfócate. Logra. Repite."
+              className="h-20 w-auto object-contain"
+            />
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-[#18181B]">
-            MrFocus
-          </h1>
           <p className="text-xs text-[#475569] font-medium max-w-xs mx-auto">
             Tu espacio privado de productividad personal y enfoque continuo
           </p>
