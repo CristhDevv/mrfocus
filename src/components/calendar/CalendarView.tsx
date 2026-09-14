@@ -47,7 +47,7 @@ export function CalendarView({
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day');
   const [isAutoScheduling, setIsAutoScheduling] = useState(false);
-  const [showEventModal, setShowEventModal] = useState(false);
+  const [showEventForm, setShowEventForm] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState('');
   const [newEventStart, setNewEventStart] = useState('09:00');
   const [newEventEnd, setNewEventEnd] = useState('10:00');
@@ -166,7 +166,7 @@ export function CalendarView({
       });
 
       if (res.ok) {
-        setShowEventModal(false);
+        setShowEventForm(false);
         setNewEventTitle('');
         onRefreshData();
       }
@@ -238,14 +238,114 @@ export function CalendarView({
 
           {/* Add Event Button */}
           <button
-            onClick={() => setShowEventModal(true)}
-            className="flex items-center space-x-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#18181B] hover:bg-slate-50 transition-colors"
+            onClick={() => setShowEventForm(!showEventForm)}
+            className={`flex items-center space-x-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+              showEventForm
+                ? 'bg-slate-200 text-slate-900'
+                : 'border border-slate-200 bg-white text-[#18181B] hover:bg-slate-50'
+            }`}
           >
-            <Plus className="h-3.5 w-3.5 text-slate-600" />
-            <span>Evento</span>
+            <Plus className="h-3.5 w-3.5" />
+            <span>{showEventForm ? 'Cancelar' : 'Evento'}</span>
           </button>
         </div>
       </div>
+
+      {/* Inline New Event Form (Zero Modals!) */}
+      {showEventForm && (
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs animate-in fade-in duration-150 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <h3 className="text-sm font-bold text-[#18181B]">
+              Nuevo Evento de Calendario
+            </h3>
+            <span className="text-[11px] text-slate-400 font-medium">Horario y detalles del compromiso</span>
+          </div>
+
+          <form onSubmit={handleCreateEvent} className="space-y-4">
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[#475569]">
+                Título del evento
+              </label>
+              <input
+                type="text"
+                required
+                value={newEventTitle}
+                onChange={(e) => setNewEventTitle(e.target.value)}
+                placeholder="Ej: Reunión con cliente, Clase de inglés..."
+                className="mt-1.5 w-full rounded-xl border border-slate-200 bg-[#F8FAFC] px-3.5 py-2.5 text-xs font-medium text-[#18181B] focus:bg-white focus:outline-none focus:border-[#18181B] transition-all"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-bold uppercase tracking-wider text-[#475569]">
+                  Hora Inicio
+                </label>
+                <input
+                  type="time"
+                  value={newEventStart}
+                  onChange={(e) => setNewEventStart(e.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-slate-200 bg-[#F8FAFC] px-3.5 py-2 text-xs font-medium text-[#18181B] focus:bg-white focus:outline-none focus:border-[#18181B]"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] font-bold uppercase tracking-wider text-[#475569]">
+                  Hora Fin
+                </label>
+                <input
+                  type="time"
+                  value={newEventEnd}
+                  onChange={(e) => setNewEventEnd(e.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-slate-200 bg-[#F8FAFC] px-3.5 py-2 text-xs font-medium text-[#18181B] focus:bg-white focus:outline-none focus:border-[#18181B]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[#475569]">
+                Color distintivo
+              </label>
+              <div className="mt-2 flex items-center space-x-2.5">
+                {[
+                  { hex: '#18181B', label: 'Grafito' },
+                  { hex: '#059669', label: 'Esmeralda' },
+                  { hex: '#0284c7', label: 'Azul' },
+                  { hex: '#d97706', label: 'Ámbar' },
+                  { hex: '#e11d48', label: 'Rojo' },
+                ].map((item) => (
+                  <button
+                    key={item.hex}
+                    type="button"
+                    onClick={() => setNewEventColor(item.hex)}
+                    className={`h-8 w-8 rounded-xl border-2 transition-all ${
+                      newEventColor === item.hex ? 'scale-110 border-slate-900 shadow-xs' : 'border-transparent hover:scale-105'
+                    }`}
+                    style={{ backgroundColor: item.hex }}
+                    title={item.label}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setShowEventForm(false)}
+                className="rounded-xl px-4 py-2 text-xs font-semibold text-[#475569] hover:bg-slate-100 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={!newEventTitle.trim()}
+                className="rounded-xl bg-[#18181B] px-5 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition-all disabled:opacity-50 active:scale-95"
+              >
+                Guardar Evento
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Main Grid: Calendar Timeline + Unscheduled Backlog Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
@@ -453,91 +553,6 @@ export function CalendarView({
           </div>
         </div>
       </div>
-
-      {/* New Event Modal */}
-      {showEventModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl animate-in fade-in zoom-in-95">
-            <h3 className="text-base font-bold text-[#18181B] mb-4">
-              Nuevo Evento de Calendario
-            </h3>
-            <form onSubmit={handleCreateEvent} className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-[#475569]">Título del evento</label>
-                <input
-                  type="text"
-                  required
-                  value={newEventTitle}
-                  onChange={(e) => setNewEventTitle(e.target.value)}
-                  placeholder="Ej: Reunión con el equipo..."
-                  className="mt-1.5 w-full rounded-lg border border-slate-200 bg-[#F8FAFC] px-3.5 py-2.5 text-xs text-[#18181B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#18181B] focus:border-[#18181B] transition-all"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-[#475569]">Hora Inicio</label>
-                  <input
-                    type="time"
-                    value={newEventStart}
-                    onChange={(e) => setNewEventStart(e.target.value)}
-                    className="mt-1.5 w-full rounded-lg border border-slate-200 bg-[#F8FAFC] px-3 py-2 text-xs text-[#18181B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#18181B] focus:border-[#18181B]"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-[#475569]">Hora Fin</label>
-                  <input
-                    type="time"
-                    value={newEventEnd}
-                    onChange={(e) => setNewEventEnd(e.target.value)}
-                    className="mt-1.5 w-full rounded-lg border border-slate-200 bg-[#F8FAFC] px-3 py-2 text-xs text-[#18181B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#18181B] focus:border-[#18181B]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-[#475569]">Color distintivo</label>
-                <div className="mt-2 flex items-center space-x-3">
-                  {[
-                    { hex: '#18181B', label: 'Grafito' },
-                    { hex: '#059669', label: 'Esmeralda' },
-                    { hex: '#0284c7', label: 'Azul' },
-                    { hex: '#d97706', label: 'Ámbar' },
-                    { hex: '#e11d48', label: 'Rojo' },
-                  ].map((item) => (
-                    <button
-                      key={item.hex}
-                      type="button"
-                      onClick={() => setNewEventColor(item.hex)}
-                      className={`h-7 w-7 rounded-lg border-2 transition-all ${
-                        newEventColor === item.hex ? 'scale-115 border-slate-800 shadow-sm' : 'border-transparent hover:scale-105'
-                      }`}
-                      style={{ backgroundColor: item.hex }}
-                      title={item.label}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setShowEventModal(false)}
-                  className="rounded-lg px-4 py-2 text-xs font-semibold text-[#475569] hover:bg-slate-100 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-[#18181B] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-slate-800 transition-all"
-                >
-                  Guardar Evento
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
