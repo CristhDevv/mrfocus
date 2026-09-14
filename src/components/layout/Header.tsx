@@ -16,6 +16,7 @@ import {
   Plus,
   LogOut,
   ShieldAlert,
+  FileJson,
   Shield,
   UserPlus,
 } from 'lucide-react';
@@ -24,12 +25,14 @@ interface HeaderProps {
   onOpenQuickCapture: () => void;
   onOpenDailyPlanning: () => void;
   onOpenAdmin?: () => void;
+  onOpenImportTemplate?: () => void;
 }
 
 export function Header({
   onOpenQuickCapture,
   onOpenDailyPlanning,
   onOpenAdmin,
+  onOpenImportTemplate,
 }: HeaderProps) {
   const { isRunning, timeLeft, startTimer, pauseTimer, formatTime } = usePomodoro();
   const { user, logout } = useAuth();
@@ -233,6 +236,20 @@ export function Header({
                   >
                     <UserPlus className="h-4 w-4 text-amber-600" />
                     <span>Crear / Gestionar Usuarios</span>
+                  </button>
+                )}
+
+                {onOpenImportTemplate && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onOpenImportTemplate();
+                    }}
+                    className="w-full flex items-center space-x-2 rounded-xl bg-slate-100/70 hover:bg-slate-100 px-3 py-2 text-xs font-bold text-[#18181B] transition-colors"
+                  >
+                    <FileJson className="h-4 w-4 text-[#475569]" />
+                    <span>Importar / Exportar Plantilla</span>
                   </button>
                 )}
 

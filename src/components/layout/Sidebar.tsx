@@ -16,18 +16,21 @@ import {
   Sparkles,
   LogOut,
   UserPlus,
+  FileJson,
 } from 'lucide-react';
 
 interface SidebarProps {
   onOpenQuickCapture: () => void;
   onOpenDailyPlanning: () => void;
   onOpenAdmin?: () => void;
+  onOpenImportTemplate?: () => void;
 }
 
 export function Sidebar({
   onOpenQuickCapture,
   onOpenDailyPlanning,
   onOpenAdmin,
+  onOpenImportTemplate,
 }: SidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
@@ -94,14 +97,24 @@ export function Sidebar({
       </div>
 
       {/* Footer Planning Helper & User Profile Card */}
-      <div className="border-t border-slate-100 pt-4 space-y-3">
+      <div className="border-t border-slate-100 pt-4 space-y-2">
         <button
           onClick={onOpenDailyPlanning}
-          className="flex w-full items-center justify-center space-x-2 rounded-xl border border-slate-200 bg-[#F8FAFC] py-2.5 px-3 text-xs font-semibold text-[#18181B] hover:bg-white hover:border-slate-300 transition-all shadow-xs"
+          className="flex w-full items-center justify-center space-x-2 rounded-xl border border-slate-200 bg-[#F8FAFC] py-2 px-3 text-xs font-semibold text-[#18181B] hover:bg-white hover:border-slate-300 transition-all shadow-xs"
         >
           <Sparkles className="h-4 w-4 text-[#059669]" />
           <span>Planificar mi Día</span>
         </button>
+
+        {onOpenImportTemplate && (
+          <button
+            onClick={onOpenImportTemplate}
+            className="flex w-full items-center justify-center space-x-2 rounded-xl border border-slate-200 bg-white py-2 px-3 text-xs font-semibold text-[#475569] hover:text-[#18181B] hover:bg-slate-50 transition-all shadow-xs"
+          >
+            <FileJson className="h-4 w-4 text-[#475569]" />
+            <span>Plantillas AI (JSON)</span>
+          </button>
+        )}
 
         {user && (
           <div className="flex items-center justify-between rounded-xl bg-slate-50 p-2.5 border border-slate-100">
