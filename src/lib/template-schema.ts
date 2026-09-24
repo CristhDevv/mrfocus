@@ -1,4 +1,4 @@
-export interface TemplateProject {
+﻿export interface TemplateProject {
   name: string;
   color?: string;
   icon?: string;
@@ -8,20 +8,49 @@ export interface TemplateProject {
 export interface TemplateHabit {
   name: string;
   description?: string;
-  frequency?: 'daily' | 'weekly';
+  frequency?: 'daily' | 'weekly' | 'weekdays' | 'weekends';
   icon?: string;
   color?: string;
+  category?: string;
   targetDays?: number;
+}
+
+export interface TemplateSubtask {
+  title: string;
+  completed?: boolean;
 }
 
 export interface TemplateTask {
   title: string;
   description?: string;
-  priority?: 'low' | 'medium' | 'high';
+  priority?: 'low' | 'medium' | 'high' | number;
   dueDate?: string | null;
+  dueTime?: string | null;
+  estimatedMinutes?: number;
   projectName?: string;
   notes?: string;
   tags?: string[];
+  subtasks?: Array<string | TemplateSubtask>;
+}
+
+export interface TemplateEvent {
+  title: string;
+  description?: string;
+  date?: string; // "today", "+1d", "YYYY-MM-DD"
+  startTime: string; // "09:00" or ISO
+  endTime: string; // "11:00" or ISO
+  isAllDay?: boolean;
+  color?: string;
+  projectName?: string;
+  location?: string;
+}
+
+export interface TemplateNote {
+  title: string;
+  content: string;
+  projectName?: string;
+  tags?: string[];
+  isPinned?: boolean;
 }
 
 export interface MrFocusTemplate {
@@ -34,6 +63,8 @@ export interface MrFocusTemplate {
     projects?: TemplateProject[];
     habits?: TemplateHabit[];
     tasks?: TemplateTask[];
+    events?: TemplateEvent[];
+    notes?: TemplateNote[];
   };
 }
 

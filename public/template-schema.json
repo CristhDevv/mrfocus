@@ -1,85 +1,24 @@
 ﻿{
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "MrFocusTemplate",
-  "description": "Schema para generar plantillas de hábitos y tareas que se importan en mr focus",
+  "title": "MrFocusMasterTemplate",
+  "description": "Plantilla Maestra JSON Completa para generar Proyectos, Hábitos, Tareas, Bloques de Calendario y Notas en mr focus",
   "type": "object",
   "required": ["version", "template"],
   "properties": {
-    "version": {
-      "type": "string",
-      "enum": ["1.0"]
-    },
+    "version": { "type": "string", "enum": ["1.0"] },
     "template": {
       "type": "object",
       "required": ["name"],
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "Nombre de la rutina o plantilla (ej: 'Semana de Enfoque Profundo')"
-        },
-        "description": {
-          "type": "string",
-          "description": "Breve descripción de los objetivos del horario"
-        },
-        "author": {
-          "type": "string",
-          "description": "Nombre del autor o agente que diseñó la rutina"
-        },
-        "tags": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "projects": {
-          "type": "array",
-          "description": "Proyectos o áreas de vida a crear (opcional si ya existen)",
-          "items": {
-            "type": "object",
-            "required": ["name"],
-            "properties": {
-              "name": { "type": "string" },
-              "color": { "type": "string", "description": "Color hex (ej: '#059669', '#3b82f6', '#f59e0b', '#8b5cf6')" },
-              "icon": { "type": "string", "description": "Nombre de icono Lucide (ej: 'Briefcase', 'Home', 'Activity', 'BookOpen')" },
-              "description": { "type": "string" }
-            }
-          }
-        },
-        "habits": {
-          "type": "array",
-          "description": "Hábitos diarios o semanales a crear",
-          "items": {
-            "type": "object",
-            "required": ["name"],
-            "properties": {
-              "name": { "type": "string" },
-              "description": { "type": "string" },
-              "frequency": { "type": "string", "enum": ["daily", "weekly"] },
-              "icon": { "type": "string", "description": "Lucide icon (ej: 'Sun', 'Activity', 'BookOpen', 'CheckCircle2')" },
-              "color": { "type": "string", "description": "Color hex (ej: '#059669', '#f59e0b', '#8b5cf6')" }
-            }
-          }
-        },
-        "tasks": {
-          "type": "array",
-          "description": "Tareas a crear en la agenda",
-          "items": {
-            "type": "object",
-            "required": ["title"],
-            "properties": {
-              "title": { "type": "string" },
-              "description": { "type": "string" },
-              "priority": { "type": "string", "enum": ["low", "medium", "high"] },
-              "dueDate": {
-                "type": "string",
-                "description": "'today' (entra directo a Hoy), 'tomorrow', '+3d', o fecha 'YYYY-MM-DD'"
-              },
-              "projectName": {
-                "type": "string",
-                "description": "Nombre del proyecto al que pertenece"
-              },
-              "notes": { "type": "string" }
-            }
-          }
-        }
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "author": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "projects": { "type": "array" },
+        "habits": { "type": "array" },
+        "tasks": { "type": "array" },
+        "events": { "type": "array" },
+        "notes": { "type": "array" }
       }
     }
   }
