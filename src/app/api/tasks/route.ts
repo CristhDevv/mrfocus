@@ -5,6 +5,8 @@ import { Task, Subtask } from '@/types';
 import { parseNaturalLanguageTask } from '@/lib/nlp-parser';
 import { getAuthUser } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   try {
     const authUser = getAuthUser(req);
@@ -16,109 +18,149 @@ export async function GET(req: NextRequest) {
     const priority = searchParams.get('priority');
     const dueDate = searchParams.get('dueDate');
     const search = searchParams.get('search');
-    const scheduled = searchParams.get('scheduled');
 
-    let query = `SELECT * FROM tasks WHERE user_id = ?`;
-    const params: (string | number)[] = [userId];
+    let tasks: Task[] = [];
 
-    if (status) {
-      query += ` AND status = ?`;
-      params.push(status);
-    }
-    if (projectId) {
-      query += ` AND project_id = ?`;
-      params.push(projectId);
-    }
-    if (priority) {
-      query += ` AND priority = ?`;
-      params.push(parseInt(priority, 10));
-    }
-    if (dueDate) {
-      query += ` AND due_date = ?`;
-      params.push(dueDate);
-    }
-    if (scheduled === 'true') {
-      query += ` AND scheduled_start IS NOT NULL`;
-    } else if (scheduled === 'false') {
-      query += ` AND scheduled_start IS NULL`;
-    }
-    if (search) {
-      query += ` AND (title LIKE ? OR description LIKE ? OR tags LIKE ?)`;
-      params.push(`%${search}%`, `%${search}%`, `%${search}%`);
-    }
+    // 1. Query Supabase
+    try {
+      let sbQuery = supabase.from('tasks').select('*').eq('user_id', userId);
 
-    query += ` ORDER BY order_index ASC, priority ASC, created_at DESC`;
+      if (status) sbQuery = sbQuery.eq('status', status);
+      if (projectId) sbQuery = sbQuery.eq('project_id', projectId);
+      if (dueDate) sbQuery = sbQuery.eq('due_date', dueDate);
 
-    const rows = db.prepare(query).all(...params) as Array<{
-      id: string;
-      title: string;
-      description?: string;
-      project_id?: string;
-      priority: number;
-      status: string;
-      due_date?: string;
-      due_time?: string;
-      estimated_minutes: number;
-      actual_minutes: number;
-      tags: string;
-      recurrence_rule?: string;
-      scheduled_start?: string;
-      scheduled_end?: string;
-      notes?: string;
-      created_at: string;
-      completed_at?: string;
-      order_index: number;
-    }>;
+      const { data: sbTasks, error: sbErr } = await sbQuery
+        .order('order_index', { ascending: true })
+        .order('created_at', { ascending: false });
 
-    const taskIds = rows.map((r) => r.id);
-    let subtasksMap: Record<string, Subtask[]> = {};
+      if (!sbErr && sbTasks && sbTasks.length > 0) {
+        const { data: sbSubtasks } = await supabase
+          .from('subtasks')
+          .select('*')
+          .eq('user_id', userId)
+          .order('order_index', { ascending: true });
 
-    if (taskIds.length > 0) {
-      const placeholders = taskIds.map(() => '?').join(',');
-      const subtaskRows = db
-        .prepare(`SELECT * FROM subtasks WHERE task_id IN (${placeholders}) ORDER BY order_index ASC`)
-        .all(...taskIds) as Array<{
-        id: string;
-        task_id: string;
-        title: string;
-        completed: number;
-        order_index: number;
-      }>;
-
-      subtaskRows.forEach((st) => {
-        if (!subtasksMap[st.task_id]) {
-          subtasksMap[st.task_id] = [];
-        }
-        subtasksMap[st.task_id].push({
-          id: st.id,
-          taskId: st.task_id,
-          title: st.title,
-          completed: Boolean(st.completed),
+        const subtaskMap: Record<string, Subtask[]> = {};
+        (sbSubtasks || []).forEach((st: any) => {
+          if (!subtaskMap[st.task_id]) subtaskMap[st.task_id] = [];
+          subtaskMap[st.task_id].push({
+            id: st.id,
+            taskId: st.task_id,
+            title: st.title,
+            completed: Boolean(st.completed),
+          });
         });
-      });
+
+        tasks = sbTasks.map((r: any) => {
+          let priorityVal = 3;
+          if (r.priority === 'high' || r.priority === 1 || r.priority === '1') priorityVal = 1;
+          else if (r.priority === 'medium' || r.priority === 2 || r.priority === '2') priorityVal = 2;
+          else if (r.priority === 'low' || r.priority === 3 || r.priority === '3') priorityVal = 3;
+          else if (r.priority) priorityVal = Number(r.priority);
+
+          return {
+            id: r.id,
+            title: r.title,
+            description: r.description || undefined,
+            projectId: r.project_id || undefined,
+            priority: priorityVal as any,
+            status: r.status as Task['status'],
+            dueDate: r.due_date || undefined,
+            dueTime: r.due_time || undefined,
+            estimatedMinutes: r.estimated_minutes || 30,
+            actualMinutes: r.actual_minutes || 0,
+            tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
+            recurrenceRule: r.recurrence_rule || undefined,
+            subtasks: subtaskMap[r.id] || [],
+            scheduledStart: r.scheduled_start || undefined,
+            scheduledEnd: r.scheduled_end || undefined,
+            notes: r.notes || undefined,
+            createdAt: r.created_at,
+            completedAt: r.completed_at || undefined,
+            orderIndex: r.order_index || 0,
+          };
+        });
+
+        if (search) {
+          const s = search.toLowerCase();
+          tasks = tasks.filter((t) => t.title.toLowerCase().includes(s) || (t.description && t.description.toLowerCase().includes(s)));
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase tasks fetch notice:', err);
     }
 
-    const tasks: Task[] = rows.map((r) => ({
-      id: r.id,
-      title: r.title,
-      description: r.description || undefined,
-      projectId: r.project_id || undefined,
-      priority: (r.priority || 4) as Task['priority'],
-      status: r.status as Task['status'],
-      dueDate: r.due_date || undefined,
-      dueTime: r.due_time || undefined,
-      estimatedMinutes: r.estimated_minutes,
-      actualMinutes: r.actual_minutes,
-      tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
-      recurrenceRule: r.recurrence_rule || undefined,
-      subtasks: subtasksMap[r.id] || [],
-      scheduledStart: r.scheduled_start || undefined,
-      scheduledEnd: r.scheduled_end || undefined,
-      notes: r.notes || undefined,
-      createdAt: r.created_at,
-      completedAt: r.completed_at || undefined,
-      orderIndex: r.order_index,
-    }));
+    // 2. Fallback to SQLite
+    if (tasks.length === 0) {
+      let query = `SELECT * FROM tasks WHERE user_id = ?`;
+      const params: (string | number)[] = [userId];
+
+      if (status) {
+        query += ` AND status = ?`;
+        params.push(status);
+      }
+      if (projectId) {
+        query += ` AND project_id = ?`;
+        params.push(projectId);
+      }
+      if (priority) {
+        query += ` AND priority = ?`;
+        params.push(parseInt(priority, 10));
+      }
+      if (dueDate) {
+        query += ` AND due_date = ?`;
+        params.push(dueDate);
+      }
+      if (search) {
+        query += ` AND (title LIKE ? OR description LIKE ? OR tags LIKE ?)`;
+        params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+      }
+
+      query += ` ORDER BY order_index ASC, priority ASC, created_at DESC`;
+
+      const rows = db.prepare(query).all(...params) as any[];
+      const taskIds = rows.map((r) => r.id);
+      let subtasksMap: Record<string, Subtask[]> = {};
+
+      if (taskIds.length > 0) {
+        const placeholders = taskIds.map(() => '?').join(',');
+        const subtaskRows = db
+          .prepare(`SELECT * FROM subtasks WHERE task_id IN (${placeholders}) ORDER BY order_index ASC`)
+          .all(...taskIds) as any[];
+
+        subtaskRows.forEach((st) => {
+          if (!subtasksMap[st.task_id]) subtasksMap[st.task_id] = [];
+          subtasksMap[st.task_id].push({
+            id: st.id,
+            taskId: st.task_id,
+            title: st.title,
+            completed: Boolean(st.completed),
+          });
+        });
+      }
+
+      tasks = rows.map((r) => ({
+        id: r.id,
+        title: r.title,
+        description: r.description || undefined,
+        projectId: r.project_id || undefined,
+        priority: (r.priority || 4) as Task['priority'],
+        status: r.status as Task['status'],
+        dueDate: r.due_date || undefined,
+        dueTime: r.due_time || undefined,
+        estimatedMinutes: r.estimated_minutes || 30,
+        actualMinutes: r.actual_minutes || 0,
+        tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
+        recurrenceRule: r.recurrence_rule || undefined,
+        subtasks: subtasksMap[r.id] || [],
+        scheduledStart: r.scheduled_start || undefined,
+        scheduledEnd: r.scheduled_end || undefined,
+        notes: r.notes || undefined,
+        createdAt: r.created_at,
+        completedAt: r.completed_at || undefined,
+        orderIndex: r.order_index,
+      }));
+    }
 
     return NextResponse.json({ tasks });
   } catch (error) {
@@ -137,7 +179,7 @@ export async function POST(req: NextRequest) {
       title,
       description,
       projectId,
-      priority = 4,
+      priority = 2,
       status = 'todo',
       dueDate,
       dueTime,
@@ -153,7 +195,7 @@ export async function POST(req: NextRequest) {
     } = body;
 
     if (naturalLanguageText) {
-      const projects = db.prepare(`SELECT * FROM projects WHERE user_id = ?`).all(userId) as Array<{ id: string; name: string; color: string; icon: string }>;
+      const projects = db.prepare(`SELECT * FROM projects WHERE user_id = ?`).all(userId) as any[];
       const parsed = parseNaturalLanguageTask(naturalLanguageText, projects);
       title = parsed.title;
       dueDate = parsed.dueDate || defaultDueDate || dueDate;
@@ -211,7 +253,7 @@ export async function POST(req: NextRequest) {
         title: title.trim(),
         description: description || null,
         project_id: projectId || null,
-        priority,
+        priority: String(priority),
         status,
         due_date: dueDate || null,
         due_time: dueTime || null,
@@ -235,16 +277,28 @@ export async function POST(req: NextRequest) {
         INSERT INTO subtasks (id, task_id, title, completed, order_index)
         VALUES (?, ?, ?, ?, ?)
       `);
-      subtasks.forEach((st: { title: string; completed?: boolean }, idx: number) => {
-        const stId = `st_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+      for (let idx = 0; idx < subtasks.length; idx++) {
+        const st = subtasks[idx];
+        const stId = `st_${Date.now()}_${idx}`;
         insertSubtask.run(stId, id, st.title, st.completed ? 1 : 0, idx);
+        try {
+          await supabase.from('subtasks').insert({
+            id: stId,
+            task_id: id,
+            user_id: userId,
+            title: st.title,
+            completed: Boolean(st.completed),
+            order_index: idx,
+            created_at: now,
+          });
+        } catch {}
         createdSubtasks.push({
           id: stId,
           taskId: id,
           title: st.title,
           completed: Boolean(st.completed),
         });
-      });
+      }
     }
 
     const newTask: Task = {

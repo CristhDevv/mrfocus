@@ -1,14 +1,49 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import { getAuthUser } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
     const authUser = getAuthUser(req);
     const userId = authUser ? authUser.id : 'default_user';
 
-    const projects = db.prepare('SELECT * FROM projects WHERE user_id = ?').all(userId);
+    let projects: any[] = [];
+
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: true });
+
+      if (!error && data && data.length > 0) {
+        const { data: tasksData } = await supabase
+          .from('tasks')
+          .select('id, project_id, status')
+          .eq('user_id', userId);
+
+        projects = data.map((p) => {
+          const pTasks = (tasksData || []).filter((t) => t.project_id === p.id);
+          const completed = pTasks.filter((t) => t.status === 'done').length;
+          return {
+            ...p,
+            task_count: pTasks.length,
+            completed_task_count: completed,
+          };
+        });
+      }
+    } catch (err) {
+      console.warn('Supabase projects fetch notice:', err);
+    }
+
+    if (projects.length === 0) {
+      const rows = db.prepare('SELECT * FROM projects WHERE user_id = ?').all(userId);
+      projects = rows;
+    }
+
     return NextResponse.json({ projects });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 });

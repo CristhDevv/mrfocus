@@ -1,26 +1,54 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import { CalendarEvent } from '@/types';
 import { getAuthUser } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
     const authUser = getAuthUser(req);
     const userId = authUser ? authUser.id : 'default_user';
 
-    const rows = db.prepare('SELECT * FROM calendar_events WHERE user_id = ?').all(userId) as any[];
-    const events: CalendarEvent[] = rows.map((r) => ({
-      id: r.id,
-      title: r.title,
-      description: r.description || undefined,
-      startTime: r.start_time,
-      endTime: r.end_time,
-      isAllDay: Boolean(r.is_all_day),
-      color: r.color || '#18181B',
-      location: r.location || undefined,
-      projectId: r.project_id || undefined,
-    }));
+    let events: CalendarEvent[] = [];
+
+    try {
+      const { data: sbEvents, error } = await supabase
+        .from('calendar_events')
+        .select('*')
+        .eq('user_id', userId)
+        .order('start_time', { ascending: true });
+
+      if (!error && sbEvents && sbEvents.length > 0) {
+        events = sbEvents.map((r: any) => ({
+          id: r.id,
+          title: r.title,
+          description: r.description || undefined,
+          startTime: r.start_time,
+          endTime: r.end_time,
+          isAllDay: Boolean(r.is_all_day),
+          color: r.color || '#18181B',
+          location: r.location || undefined,
+          projectId: r.project_id || undefined,
+        }));
+      }
+    } catch {}
+
+    if (events.length === 0) {
+      const rows = db.prepare('SELECT * FROM calendar_events WHERE user_id = ?').all(userId) as any[];
+      events = rows.map((r) => ({
+        id: r.id,
+        title: r.title,
+        description: r.description || undefined,
+        startTime: r.start_time,
+        endTime: r.end_time,
+        isAllDay: Boolean(r.is_all_day),
+        color: r.color || '#18181B',
+        location: r.location || undefined,
+        projectId: r.project_id || undefined,
+      }));
+    }
 
     return NextResponse.json({ events });
   } catch (error) {

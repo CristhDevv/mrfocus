@@ -1,8 +1,10 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import { getAuthUser } from '@/lib/auth';
 import { validateTemplate, resolveTemplateDate, MrFocusTemplate } from '@/lib/template-schema';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const user = getAuthUser(req);
@@ -25,7 +27,11 @@ export async function POST(req: NextRequest) {
   // ---- 1. PROJECTS ----
   const projectNameToId = new Map<string, string>();
 
-  // Load existing projects for user
+  try {
+    const { data: sbProjs } = await supabase.from('projects').select('id, name').eq('user_id', user.id);
+    (sbProjs || []).forEach((p: any) => projectNameToId.set(p.name.toLowerCase().trim(), p.id));
+  } catch {}
+
   const existingProjects = db.prepare('SELECT id, name FROM projects WHERE user_id = ?').all(user.id) as { id: string; name: string }[];
   for (const p of existingProjects) {
     projectNameToId.set(p.name.toLowerCase().trim(), p.id);
@@ -33,7 +39,7 @@ export async function POST(req: NextRequest) {
 
   for (const proj of (tmpl.projects || [])) {
     const key = proj.name.toLowerCase().trim();
-    if (projectNameToId.has(key)) continue; // already exists
+    if (projectNameToId.has(key)) continue;
 
     const projId = 'proj_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
     db.prepare(
@@ -42,11 +48,17 @@ export async function POST(req: NextRequest) {
 
     try {
       await supabase.from('projects').insert({
-        id: projId, user_id: user.id, name: proj.name,
-        color: proj.color || '#475569', icon: proj.icon || 'Layers',
-        description: proj.description || '', created_at: now,
+        id: projId,
+        user_id: user.id,
+        name: proj.name,
+        color: proj.color || '#475569',
+        icon: proj.icon || 'Layers',
+        description: proj.description || '',
+        created_at: now,
       });
-    } catch {}
+    } catch (e) {
+      console.warn('Supabase template insert project error:', e);
+    }
 
     projectNameToId.set(key, projId);
     counters.projects++;
@@ -54,23 +66,37 @@ export async function POST(req: NextRequest) {
 
   // ---- 2. HABITS ----
   for (const habit of (tmpl.habits || [])) {
-    const habitId = 'habit_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    const habitId = 'hab_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    const targetDays = habit.targetDays || 7;
+
     db.prepare(
-      'INSERT INTO habits (id, user_id, name, description, frequency, icon, color, streak, completed_dates, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO habits (id, user_id, name, icon, category, frequency, target_days_per_week, streak, best_streak, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     ).run(
-      habitId, user.id, habit.name, habit.description || '',
-      habit.frequency || 'daily', habit.icon || 'Activity', habit.color || '#059669',
-      0, JSON.stringify([]), now
+      habitId, user.id, habit.name, habit.icon || 'Activity', 'General',
+      habit.frequency || 'daily', targetDays, 0, 0, now
     );
 
     try {
       await supabase.from('habits').insert({
-        id: habitId, user_id: user.id, name: habit.name,
-        description: habit.description || '', frequency: habit.frequency || 'daily',
-        icon: habit.icon || 'Activity', color: habit.color || '#059669',
-        streak: 0, completed_dates: JSON.stringify([]), created_at: now,
+        id: habitId,
+        user_id: user.id,
+        title: habit.name,
+        name: habit.name,
+        description: habit.description || '',
+        frequency: habit.frequency || 'daily',
+        icon: habit.icon || 'Activity',
+        color: habit.color || '#059669',
+        target_per_day: targetDays,
+        target_days_per_week: targetDays,
+        streak_days: 0,
+        streak: 0,
+        best_streak: 0,
+        completed_dates: [],
+        created_at: now,
       });
-    } catch {}
+    } catch (e) {
+      console.warn('Supabase template insert habit error:', e);
+    }
 
     counters.habits++;
   }
@@ -82,24 +108,40 @@ export async function POST(req: NextRequest) {
       ? (projectNameToId.get(task.projectName.toLowerCase().trim()) || null)
       : null;
 
+    let priorityNum = 2;
+    if (task.priority === 'high') priorityNum = 1;
+    else if (task.priority === 'low') priorityNum = 3;
+    else priorityNum = 2;
+
     const taskId = 'task_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
     db.prepare(
       `INSERT INTO tasks (id, user_id, title, description, status, priority, due_date, project_id, notes, created_at, updated_at)
-       VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?)`
+       VALUES (?, ?, ?, ?, 'todo', ?, ?, ?, ?, ?, ?)`
     ).run(
       taskId, user.id, task.title, task.description || '',
-      task.priority || 'medium', dueDate, projectId, task.notes || '', now, now
+      priorityNum, dueDate, projectId, task.notes || '', now, now
     );
 
     try {
       await supabase.from('tasks').insert({
-        id: taskId, user_id: user.id, title: task.title,
-        description: task.description || '', status: 'pending',
-        priority: task.priority || 'medium', due_date: dueDate,
-        project_id: projectId, notes: task.notes || '',
-        created_at: now, updated_at: now,
+        id: taskId,
+        user_id: user.id,
+        title: task.title,
+        description: task.description || null,
+        status: 'todo',
+        priority: String(priorityNum),
+        due_date: dueDate || null,
+        project_id: projectId || null,
+        notes: task.notes || null,
+        tags: task.tags || [],
+        estimated_minutes: 30,
+        actual_minutes: 0,
+        order_index: 0,
+        created_at: now,
       });
-    } catch {}
+    } catch (e) {
+      console.warn('Supabase template insert task error:', e);
+    }
 
     counters.tasks++;
   }

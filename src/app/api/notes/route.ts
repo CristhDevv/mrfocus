@@ -1,26 +1,55 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import { Note } from '@/types';
 import { getAuthUser } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
     const authUser = getAuthUser(req);
     const userId = authUser ? authUser.id : 'default_user';
 
-    const rows = db.prepare('SELECT * FROM notes WHERE user_id = ?').all(userId) as any[];
-    const notes: Note[] = rows.map((r) => ({
-      id: r.id,
-      title: r.title,
-      content: r.content,
-      projectId: r.project_id || undefined,
-      taskId: r.task_id || undefined,
-      tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
-      isPinned: Boolean(r.is_pinned),
-      createdAt: r.created_at,
-      updatedAt: r.updated_at,
-    }));
+    let notes: Note[] = [];
+
+    try {
+      const { data: sbNotes, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', userId)
+        .order('is_pinned', { ascending: false })
+        .order('updated_at', { ascending: false });
+
+      if (!error && sbNotes && sbNotes.length > 0) {
+        notes = sbNotes.map((r: any) => ({
+          id: r.id,
+          title: r.title,
+          content: r.content || '',
+          projectId: r.project_id || undefined,
+          taskId: r.task_id || undefined,
+          tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
+          isPinned: Boolean(r.is_pinned),
+          createdAt: r.created_at,
+          updatedAt: r.updated_at || r.created_at,
+        }));
+      }
+    } catch {}
+
+    if (notes.length === 0) {
+      const rows = db.prepare('SELECT * FROM notes WHERE user_id = ?').all(userId) as any[];
+      notes = rows.map((r) => ({
+        id: r.id,
+        title: r.title,
+        content: r.content,
+        projectId: r.project_id || undefined,
+        taskId: r.task_id || undefined,
+        tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
+        isPinned: Boolean(r.is_pinned),
+        createdAt: r.created_at,
+        updatedAt: r.updated_at,
+      }));
+    }
 
     return NextResponse.json({ notes });
   } catch (error) {

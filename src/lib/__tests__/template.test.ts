@@ -1,5 +1,12 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { validateTemplate, resolveTemplateDate } from '../template-schema';
+
+function getLocalDateString(d: Date): string {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
 
 describe('Template Schema & Helpers', () => {
   it('validates a correct template structure', () => {
@@ -7,7 +14,7 @@ describe('Template Schema & Helpers', () => {
       version: '1.0',
       template: {
         name: 'Rutina de Prueba',
-        habits: [{ name: 'Hábito 1', frequency: 'daily' }],
+        habits: [{ name: 'H�bito 1', frequency: 'daily' }],
         tasks: [{ title: 'Tarea 1', dueDate: 'today' }],
       },
     };
@@ -23,17 +30,17 @@ describe('Template Schema & Helpers', () => {
   });
 
   it('resolves relative dates properly', () => {
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = getLocalDateString(new Date());
     expect(resolveTemplateDate('today')).toBe(todayStr);
 
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    const tomorrowStr = getLocalDateString(tomorrow);
     expect(resolveTemplateDate('tomorrow')).toBe(tomorrowStr);
 
     const in3Days = new Date();
     in3Days.setDate(in3Days.getDate() + 3);
-    const in3DaysStr = in3Days.toISOString().split('T')[0];
+    const in3DaysStr = getLocalDateString(in3Days);
     expect(resolveTemplateDate('+3d')).toBe(in3DaysStr);
 
     expect(resolveTemplateDate('2026-10-15')).toBe('2026-10-15');

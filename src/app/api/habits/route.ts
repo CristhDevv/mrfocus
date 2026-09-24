@@ -1,30 +1,72 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import { Habit } from '@/types';
 import { getAuthUser } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
     const authUser = getAuthUser(req);
     const userId = authUser ? authUser.id : 'default_user';
 
-    const rows = db.prepare('SELECT * FROM habits WHERE user_id = ?').all(userId) as any[];
-    const habits: Habit[] = rows.map((r) => {
-      const logs = db.prepare('SELECT completed_date FROM habit_logs WHERE user_id = ? AND habit_id = ?').all(userId, r.id) as any[];
-      return {
-        id: r.id,
-        name: r.name,
-        icon: r.icon || 'Activity',
-        category: r.category || 'General',
-        frequency: r.frequency || 'daily',
-        targetDaysPerWeek: r.target_days_per_week || 7,
-        streak: r.streak || 0,
-        bestStreak: r.best_streak || 0,
-        completedDates: logs.map((l) => l.completed_date),
-        createdAt: r.created_at,
-      };
-    });
+    let habits: Habit[] = [];
+
+    try {
+      const { data: sbHabits, error: habErr } = await supabase
+        .from('habits')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: true });
+
+      if (!habErr && sbHabits && sbHabits.length > 0) {
+        const { data: sbLogs } = await supabase
+          .from('habit_logs')
+          .select('habit_id, date')
+          .eq('user_id', userId);
+
+        const logsMap: Record<string, string[]> = {};
+        (sbLogs || []).forEach((l: any) => {
+          if (!logsMap[l.habit_id]) logsMap[l.habit_id] = [];
+          logsMap[l.habit_id].push(l.date);
+        });
+
+        habits = sbHabits.map((r: any) => ({
+          id: r.id,
+          name: r.name || r.title || 'Hábito',
+          icon: r.icon || 'Activity',
+          category: r.category || 'General',
+          frequency: (r.frequency || 'daily') as any,
+          targetDaysPerWeek: r.target_days_per_week || r.target_per_day || 7,
+          streak: r.streak || r.streak_days || 0,
+          bestStreak: r.best_streak || 0,
+          completedDates: logsMap[r.id] || (Array.isArray(r.completed_dates) ? r.completed_dates : []),
+          createdAt: r.created_at,
+        }));
+      }
+    } catch (err) {
+      console.warn('Supabase habits fetch notice:', err);
+    }
+
+    if (habits.length === 0) {
+      const rows = db.prepare('SELECT * FROM habits WHERE user_id = ?').all(userId) as any[];
+      habits = rows.map((r) => {
+        const logs = db.prepare('SELECT completed_date FROM habit_logs WHERE user_id = ? AND habit_id = ?').all(userId, r.id) as any[];
+        return {
+          id: r.id,
+          name: r.name || r.title || 'Hábito',
+          icon: r.icon || 'Activity',
+          category: r.category || 'General',
+          frequency: r.frequency || 'daily',
+          targetDaysPerWeek: r.target_days_per_week || 7,
+          streak: r.streak || 0,
+          bestStreak: r.best_streak || 0,
+          completedDates: logs.map((l) => l.completed_date),
+          createdAt: r.created_at,
+        };
+      });
+    }
 
     return NextResponse.json({ habits });
   } catch (error) {
@@ -55,11 +97,14 @@ export async function POST(req: NextRequest) {
         id,
         user_id: userId,
         title: name.trim(),
+        name: name.trim(),
         icon,
         category,
         frequency,
         target_per_day: targetDaysPerWeek,
+        target_days_per_week: targetDaysPerWeek,
         streak_days: 0,
+        streak: 0,
         best_streak: 0,
         created_at: now,
       });
